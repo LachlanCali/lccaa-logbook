@@ -1,0 +1,2643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>LCCAA Logbook</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0f0f13;
+    --surface: #18181f;
+    --border: #2a2a35;
+    --text: #e8e8f0;
+    --muted: #7a7a96;
+    --c1: #f97316; /* practice */
+    --c2: #22d3ee; /* feasibility */
+    --c3: #a3e635; /* planning */
+    --c4: #818cf8; /* documentation */
+    --c5: #fb7185; /* construction */
+    --c6: #c084fc; /* pc reference */
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 48px 40px 36px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(15,15,19,0.95);
+    backdrop-filter: blur(12px);
+    z-index: 50;
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+    font-weight: 300;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .progress-track {
+    width: 80px;
+    height: 5px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #22d3ee, #a3e635);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #prog-count { color: #fff; font-weight: 600; }
+
+  /* ── NAV TABS ── */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    margin-top: 16px;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.12s;
+  }
+  .tab:hover { color: #fff; border-color: #555; }
+  .tab.active { color: var(--bg); font-weight: 700; }
+  .tab.t1.active { background: var(--c1); border-color: var(--c1); }
+  .tab.t2.active { background: var(--c2); border-color: var(--c2); color: #000; }
+  .tab.t3.active { background: var(--c3); border-color: var(--c3); color: #000; }
+  .tab.t4.active { background: var(--c4); border-color: var(--c4); }
+  .tab.t5.active { background: var(--c5); border-color: var(--c5); }
+  .tab.t6.active { background: var(--c6); border-color: var(--c6); }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ── SECTION ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .section-sub {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 6px;
+  }
+  .section-shortcut {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    border: 1px solid;
+  }
+  .sc1 { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); color: var(--c1); }
+  .sc2 { background: rgba(34,211,238,0.1); border-color: rgba(34,211,238,0.3); color: var(--c2); }
+  .sc3 { background: rgba(163,230,53,0.1); border-color: rgba(163,230,53,0.3); color: var(--c3); }
+  .sc4 { background: rgba(129,140,248,0.1); border-color: rgba(129,140,248,0.3); color: var(--c4); }
+  .sc5 { background: rgba(251,113,133,0.1); border-color: rgba(251,113,133,0.3); color: var(--c5); }
+  .sc6 { background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.3); color: var(--c6); }
+
+  /* ── PC REFERENCE TABLE ── */
+  .pc-ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .pc-ref-table thead tr { background: var(--surface); }
+  .pc-ref-table th {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .pc-ref-table th.col-grad { color: #a3e635; }
+  .pc-ref-table th.col-reg  { color: #22d3ee; }
+  .pc-ref-table th.col-post { color: #c084fc; }
+  .pc-ref-table td {
+    padding: 13px 16px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .pc-ref-table tbody tr:last-child td { border-bottom: none; }
+  .pc-ref-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+  .pc-ref-table td.pc-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c6);
+    white-space: nowrap;
+    vertical-align: top;
+    padding-top: 14px;
+  }
+  .pc-ref-table td.pc-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    vertical-align: top;
+    padding-top: 14px;
+  }
+  .pc-ref-table td.pc-cell { color: var(--muted); font-size: 12.5px; }
+  .pc-ref-table td.example-cell {
+    color: #c8c8e0;
+    font-size: 12px;
+    font-style: italic;
+    background: rgba(192,132,252,0.04);
+    border-left: 2px solid rgba(192,132,252,0.25);
+  }
+  .pc-group-header td {
+    background: rgba(192,132,252,0.08);
+    border-bottom: 1px solid rgba(192,132,252,0.2) !important;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c6);
+    padding: 8px 16px;
+  }
+
+  /* ── TABLE ── */
+  .log-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .log-table thead tr {
+    background: var(--surface);
+  }
+  .log-table th {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .log-table th:nth-last-child(2) { text-align: center; width: 60px; }
+
+  .log-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+  .log-table tbody tr:last-child { border-bottom: none; }
+  .log-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+  .log-table tbody tr.done-row { background: rgba(34,197,94,0.05); }
+
+  .log-table td {
+    padding: 13px 16px;
+    vertical-align: middle;
+  }
+  .task-cell {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .task-cell.done-row td { color: var(--muted); }
+
+  .pc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .pc-tag {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 5px;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .pc-tag:hover { transform: scale(1.05); }
+  .t1 .pc-tag { color: var(--c1); border-color: rgba(249,115,22,0.35); background: rgba(249,115,22,0.1); }
+  .t2 .pc-tag { color: var(--c2); border-color: rgba(34,211,238,0.35); background: rgba(34,211,238,0.1); }
+  .t3 .pc-tag { color: var(--c3); border-color: rgba(163,230,53,0.35); background: rgba(163,230,53,0.1); }
+  .t4 .pc-tag { color: var(--c4); border-color: rgba(129,140,248,0.35); background: rgba(129,140,248,0.1); }
+  .t5 .pc-tag { color: var(--c5); border-color: rgba(251,113,133,0.35); background: rgba(251,113,133,0.1); }
+  .t6 .pc-tag { color: var(--c6); border-color: rgba(192,132,252,0.35); background: rgba(192,132,252,0.1); }
+
+
+  /* ── NOTES COLUMN ── */
+  .notes-cell {
+    padding: 6px 10px;
+    vertical-align: middle;
+    min-width: 160px;
+  }
+  .notes-input {
+    width: 100%;
+    min-height: 34px;
+    max-height: 120px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Epilogue', sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 6px 9px;
+    resize: vertical;
+    transition: border-color 0.15s, background 0.15s;
+    display: block;
+  }
+  .notes-input:focus {
+    outline: none;
+    border-color: #555;
+    background: rgba(255,255,255,0.07);
+  }
+  .notes-input::placeholder { color: var(--muted); }
+  .done-row .notes-input {
+    border-color: rgba(34,197,94,0.25);
+    background: rgba(34,197,94,0.05);
+  }
+
+  .done-cell { text-align: center; width: 60px; }
+  .check-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-size: 13px;
+    color: transparent;
+  }
+  .check-btn:hover { border-color: #22c55e; color: #22c55e; }
+  .done-row .check-btn {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: #fff;
+  }
+
+  /* PC tooltip popup */
+  .tooltip-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .tooltip-overlay.show { display: flex; }
+  .tooltip-box {
+    background: #1e1e28;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  }
+  .tooltip-pc { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .tooltip-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 10px; line-height: 1.2; }
+  .tooltip-desc { font-size: 13px; color: #aaa; line-height: 1.6; margin-bottom: 16px; }
+  .tooltip-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--muted); cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.12s;
+  }
+  .tooltip-close:hover { background: var(--border); color: #fff; }
+
+
+  /* ── AI DAILY LOGGER ── */
+  .ai-banner {
+    background: linear-gradient(135deg, rgba(192,132,252,0.12) 0%, rgba(34,211,238,0.08) 100%);
+    border: 1px solid rgba(192,132,252,0.3);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+  }
+  .ai-banner-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .ai-banner-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #c084fc, #22d3ee);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .ai-banner-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .ai-banner-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .ai-textarea-wrap { position: relative; }
+  .ai-textarea {
+    width: 100%;
+    min-height: 90px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(192,132,252,0.25);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Epilogue', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.55;
+    padding: 12px 14px;
+    resize: vertical;
+    transition: border-color 0.15s;
+  }
+  .ai-textarea:focus { outline: none; border-color: rgba(192,132,252,0.6); }
+  .ai-textarea::placeholder { color: var(--muted); }
+  .ai-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .ai-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, #c084fc, #818cf8);
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .ai-submit-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .ai-submit-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+  .ai-hint {
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  /* Results */
+  .ai-results {
+    margin-top: 18px;
+    display: none;
+  }
+  .ai-results.show { display: block; }
+  .ai-results-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--c6);
+    margin-bottom: 10px;
+  }
+  .ai-pc-card {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .ai-pc-card-badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--c6);
+    background: rgba(192,132,252,0.12);
+    border: 1px solid rgba(192,132,252,0.3);
+    border-radius: 6px;
+    padding: 3px 9px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .ai-pc-card-body { flex: 1; }
+  .ai-pc-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .ai-pc-card-reason {
+    font-size: 12.5px;
+    color: #aaa;
+    line-height: 1.55;
+  }
+  .ai-pc-card-mark {
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .ai-mark-btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(34,197,94,0.35);
+    background: rgba(34,197,94,0.08);
+    color: #4ade80;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.13s;
+  }
+  .ai-mark-btn:hover { background: rgba(34,197,94,0.2); }
+  .ai-mark-btn.marked { background: #22c55e; border-color: #22c55e; color: #fff; }
+  .ai-loading {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 0 4px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .ai-loading.show { display: flex; }
+  .ai-spinner {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--c6);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ai-error {
+    display: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(251,113,133,0.08);
+    border: 1px solid rgba(251,113,133,0.25);
+    color: #fb7185;
+    font-size: 12.5px;
+    margin-top: 12px;
+  }
+  .ai-error.show { display: block; }
+
+  /* ── DAY TABS ── */
+  .day-tabs-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .day-tab {
+    padding: 7px 18px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.14s;
+    position: relative;
+  }
+  .day-tab:hover { color: #fff; border-color: #555; }
+  .day-tab.active {
+    background: var(--surface);
+    border-color: #22d3ee;
+    color: #22d3ee;
+    box-shadow: 0 0 0 1px rgba(34,211,238,0.2);
+  }
+  .day-tab .day-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    margin-left: 6px;
+    vertical-align: middle;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .day-tab.has-logs .day-dot { opacity: 1; }
+
+  .week-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+  .week-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+  }
+  .week-nav-btn {
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .week-nav-btn:hover { color: #fff; border-color: #555; }
+  .week-display {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  /* ── DAY LOGGER PANEL ── */
+  .day-log-panel {
+    background: rgba(34,211,238,0.04);
+    border: 1px solid rgba(34,211,238,0.18);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .day-log-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .day-log-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: #22d3ee;
+  }
+  .day-log-subtitle {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .day-log-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .day-log-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    position: relative;
+  }
+  .day-log-entry-badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #22d3ee;
+    background: rgba(34,211,238,0.1);
+    border: 1px solid rgba(34,211,238,0.25);
+    border-radius: 5px;
+    padding: 2px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .day-log-entry-text {
+    flex: 1;
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .day-log-entry-note {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 3px;
+    font-style: italic;
+  }
+  .day-log-entry-del {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    transition: all 0.12s;
+    margin-top: 1px;
+  }
+  .day-log-entry-del:hover { border-color: #fb7185; color: #fb7185; background: rgba(251,113,133,0.1); }
+  .day-log-empty {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-style: italic;
+    padding: 6px 0;
+  }
+  .day-log-add {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .day-log-pc-input {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 7px 10px;
+    width: 80px;
+    text-transform: uppercase;
+    transition: border-color 0.15s;
+  }
+  .day-log-pc-input:focus { outline: none; border-color: #22d3ee; }
+  .day-log-note-input {
+    flex: 1;
+    min-width: 180px;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 7px 10px;
+    transition: border-color 0.15s;
+  }
+  .day-log-note-input:focus { outline: none; border-color: #22d3ee; }
+  .day-log-note-input::placeholder, .day-log-pc-input::placeholder { color: var(--muted); }
+  .day-log-add-btn {
+    padding: 7px 16px;
+    border-radius: 6px;
+    border: none;
+    background: rgba(34,211,238,0.15);
+    border: 1px solid rgba(34,211,238,0.35);
+    color: #22d3ee;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.13s;
+  }
+  .day-log-add-btn:hover { background: rgba(34,211,238,0.25); }
+  .day-log-clear-btn {
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: 1px solid rgba(251,113,133,0.3);
+    background: transparent;
+    color: #fb7185;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.13s;
+  }
+  .day-log-clear-btn:hover { background: rgba(251,113,133,0.1); }
+
+  .day-header-row {
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* ── DRIVE SYNC BAR ── */
+  .sync-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+  .sync-bar-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .sync-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .sync-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .sync-dot.connected { background: #22c55e; }
+  .sync-dot.syncing { background: #f59e0b; animation: pulse 1s infinite; }
+  .sync-dot.error { background: #fb7185; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .sync-btn {
+    padding: 4px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+  }
+  .sync-btn:hover { color: #fff; border-color: #555; }
+  .sync-btn.primary {
+    border-color: rgba(34,197,94,0.4);
+    color: #4ade80;
+    background: rgba(34,197,94,0.07);
+  }
+  .sync-btn.primary:hover { background: rgba(34,197,94,0.15); }
+  .sync-btn.danger { border-color: rgba(251,113,133,0.35); color: #fb7185; }
+  .sync-btn.danger:hover { background: rgba(251,113,133,0.1); }
+  .sync-spacer { flex: 1; }
+  .sync-time {
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0.7;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: #1a1a24;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 440px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  }
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .modal-sub {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .modal-sub a { color: #22d3ee; text-decoration: none; }
+  .modal-sub a:hover { text-decoration: underline; }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--muted); cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.12s;
+  }
+  .modal-close:hover { background: var(--border); color: #fff; }
+  .modal-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Epilogue', sans-serif;
+    font-size: 13px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+  .modal-input:focus { outline: none; border-color: #22d3ee; }
+  .modal-input::placeholder { color: var(--muted); }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .modal-btn {
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .modal-btn:hover { opacity: 0.85; }
+  .modal-btn.confirm { background: #22d3ee; color: #000; }
+  .modal-btn.cancel { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+  .modal-steps {
+    list-style: none;
+    counter-reset: steps;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .modal-steps li {
+    counter-increment: steps;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+    color: #c8c8e0;
+    line-height: 1.5;
+  }
+  .modal-steps li::before {
+    content: counter(steps);
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(34,211,238,0.15);
+    border: 1px solid rgba(34,211,238,0.3);
+    color: #22d3ee;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .modal-steps code {
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 12px;
+    color: #a3e635;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 24px 16px 16px; }
+    main { padding: 20px 12px 60px; }
+    .section-title { font-size: 22px; }
+    .log-table th:first-child, .log-table td:first-child { padding-left: 12px; }
+    .log-table th:last-child, .log-table td:last-child { padding-right: 12px; }
+    .week-nav { margin-left: 0; width: 100%; justify-content: flex-end; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── SYNC BAR ── -->
+<div class="sync-bar">
+  <div class="sync-bar-inner">
+    <div class="sync-status">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncLabel">Not connected to Google Drive</span>
+    </div>
+    <button class="sync-btn primary" id="connectBtn" onclick="showConnectModal()">Connect Drive</button>
+    <button class="sync-btn" id="syncNowBtn" onclick="syncNow()" style="display:none">↺ Sync Now</button>
+    <div class="sync-spacer"></div>
+    <button class="sync-btn" onclick="exportData()" title="Download all your data as a JSON file">⬇ Export</button>
+    <button class="sync-btn" onclick="document.getElementById('importFile').click()" title="Import a previously exported JSON file">⬆ Import</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    <span class="sync-time" id="syncTime"></span>
+  </div>
+</div>
+
+<!-- ── CONNECT MODAL ── -->
+<div class="modal-overlay" id="connectModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('connectModal')">✕</button>
+    <div class="modal-title">Connect Google Drive</div>
+    <div class="modal-sub">Your logbook data will be saved to a file called <strong>lccaa-logbook-data.json</strong> in your Google Drive. It syncs automatically every time you make a change.</div>
+    <ol class="modal-steps">
+      <li>Go to <a href="https://script.google.com" target="_blank">script.google.com</a>, create a new project, delete any existing code</li>
+      <li>Click <strong>Copy Apps Script Code</strong> below and paste it in</li>
+      <li>Click <strong>Deploy → New deployment → Web app</strong>. Set <strong>Execute as: Me</strong> and <strong>Who has access: Anyone</strong> — this is critical</li>
+      <li>Click <strong>Deploy</strong>, authorise access when prompted, then copy the Web App URL and paste it below</li>
+    </ol>
+    <button class="sync-btn" style="margin-bottom:16px;width:100%;text-align:center" onclick="copyAppsScript(this)">📋 Copy Apps Script Code</button>
+    <input class="modal-input" id="driveUrlInput" type="url" placeholder="Paste your Web App URL here…" />
+    <div class="modal-actions">
+      <button class="modal-btn confirm" onclick="saveDriveUrl()">Connect</button>
+      <button class="modal-btn cancel" onclick="closeModal('connectModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── IMPORT CONFIRM MODAL ── -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('importModal')">✕</button>
+    <div class="modal-title">Import Data</div>
+    <div class="modal-sub" id="importModalSub">This will merge imported data with your existing logs. Your current data won't be lost. Continue?</div>
+    <div class="modal-actions">
+      <button class="modal-btn confirm" onclick="confirmImport()">Yes, Import</button>
+      <button class="modal-btn cancel" onclick="closeModal('importModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── API KEY MODAL ── -->
+<div class="modal-overlay" id="apiKeyModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('apiKeyModal')">✕</button>
+    <div class="modal-title">🔑 Gemini API Key</div>
+    <div class="modal-sub">
+      Get a free key at <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → <strong>Get API Key → Create API key</strong>. No credit card required. Your key is stored only in this browser.
+    </div>
+    <input class="modal-input" id="apiKeyInput" type="password" placeholder="Paste your Gemini API key here…" />
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <input type="checkbox" id="showKeyToggle" onchange="document.getElementById('apiKeyInput').type=this.checked?'text':'password'" style="cursor:pointer">
+      <label for="showKeyToggle" style="font-size:12px;color:var(--muted);cursor:pointer">Show key</label>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn confirm" onclick="saveApiKey()">Save Key</button>
+      <button class="modal-btn cancel" onclick="closeModal('apiKeyModal')">Cancel</button>
+      <button class="modal-btn" onclick="clearApiKey()" style="background:transparent;border:1px solid rgba(251,113,133,0.3);color:#fb7185;margin-left:auto">Clear Key</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <h1>LCCAA Logbook</h1>
+      <p>Find your task → log your PC. Click any PC tag for a quick description.</p>
+    </div>
+    <div class="progress-pill">
+      <span>Tasks logged</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span id="prog-count">0</span>
+    </div>
+  </div>
+  <div class="header-inner" style="margin-top:0; flex-direction: column; align-items: stretch; gap: 8px;">
+    <!-- DAY TABS ROW -->
+    <div class="day-tabs-row">
+      <span class="week-label">Week of</span>
+      <button class="day-tab" id="dt-mon" onclick="selectDay('mon',this)">Mon<span class="day-dot"></span></button>
+      <button class="day-tab" id="dt-tue" onclick="selectDay('tue',this)">Tue<span class="day-dot"></span></button>
+      <button class="day-tab" id="dt-wed" onclick="selectDay('wed',this)">Wed<span class="day-dot"></span></button>
+      <button class="day-tab" id="dt-thu" onclick="selectDay('thu',this)">Thu<span class="day-dot"></span></button>
+      <button class="day-tab" id="dt-fri" onclick="selectDay('fri',this)">Fri<span class="day-dot"></span></button>
+      <div class="week-nav">
+        <button class="week-nav-btn" onclick="changeWeek(-1)">← Prev</button>
+        <div class="week-display" id="weekDisplay">–</div>
+        <button class="week-nav-btn" onclick="changeWeek(1)">Next →</button>
+      </div>
+    </div>
+    <!-- SECTION TABS ROW -->
+    <div class="tabs">
+      <button class="tab t1 active" onclick="showSection('s1',this)">🏢 Practice &amp; Setup</button>
+      <button class="tab t2" onclick="showSection('s2',this)">🌏 Feasibility &amp; Concept</button>
+      <button class="tab t3" onclick="showSection('s3',this)">🌱 Planning &amp; Sustainability</button>
+      <button class="tab t4" onclick="showSection('s4',this)">📐 Documentation</button>
+      <button class="tab t5" onclick="showSection('s5',this)">🏗 Construction</button>
+      <button class="tab t6" onclick="showSection('s6',this)">📋 PC Reference</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════════════════════════════════
+     DAY LOG PANEL
+═══════════════════════════════════════════ -->
+<div class="day-log-panel" id="dayLogPanel">
+  <div class="day-header-row">
+    <div>
+      <div class="day-log-title" id="dayLogTitle">Monday</div>
+      <div class="day-log-subtitle">Log PCs you've demonstrated today. Scroll through sections 1–6 below to find matching tasks.</div>
+    </div>
+  </div>
+  <div class="day-log-entries" id="dayLogEntries">
+    <div class="day-log-empty" id="dayLogEmpty">No PCs logged for this day yet — use the sections below to find your tasks, then log PCs here.</div>
+  </div>
+  <div class="day-log-add">
+    <input class="day-log-pc-input" id="dayPcInput" type="text" placeholder="PC#" maxlength="5" />
+    <input class="day-log-note-input" id="dayNoteInput" type="text" placeholder="Brief description of what you did…" />
+    <button class="day-log-add-btn" onclick="addDayLog()">+ Log PC</button>
+    <button class="day-log-clear-btn" onclick="clearDayLog()">Clear Day</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AI DAILY LOGGER
+═══════════════════════════════════════════ -->
+<div class="ai-banner" id="aiBanner">
+  <div class="ai-banner-header">
+    <div class="ai-banner-icon">✦</div>
+    <div>
+      <div class="ai-banner-title">What did you do today?</div>
+      <div class="ai-banner-sub">Describe your tasks and AI will suggest which PC requirements you may have covered.</div>
+    </div>
+  </div>
+  <div class="ai-textarea-wrap">
+    <textarea class="ai-textarea" id="aiInput" placeholder="e.g. Today I attended a site meeting, reviewed the structural engineer's drawings and coordinated with the services consultant. I also updated the project program and sent the client an email seeking approval to proceed to the next phase…"></textarea>
+  </div>
+  <div class="ai-actions">
+    <button class="ai-submit-btn" id="aiSubmitBtn" onclick="runAI()">
+      <span>✦</span> Suggest PCs
+    </button>
+    <button class="sync-btn" onclick="promptForApiKey()" title="Set or update your free Gemini API key" style="font-size:11px;padding:6px 12px">🔑 API Key</button>
+    <span class="ai-hint">Free — uses Google Gemini. Get a key at <strong>aistudio.google.com</strong> → Get API Key (no credit card). Stored only in your browser.</span>
+  </div>
+  <div class="ai-loading" id="aiLoading">
+    <div class="ai-spinner"></div>
+    <span>Analysing your day…</span>
+  </div>
+  <div class="ai-error" id="aiError"></div>
+  <div class="ai-results" id="aiResults">
+    <div class="ai-results-label">✦ Suggested PCs for today</div>
+    <div id="aiResultsList"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     S1 – PRACTICE & PROJECT MANAGEMENT
+═══════════════════════════════════════════ -->
+<div class="section active" id="s1">
+  <div class="section-title">Practice &amp; Project Management</div>
+  <div class="section-sub">PC 1–16 · Use when dealing with contracts, fees, risk, regulations, or project setup</div>
+  <div class="section-shortcut sc1">💡 Shortcut: If your day involved contracts, fees, or practice operations → PC 1–16</div>
+
+  <table class="log-table t1">
+    <thead><tr><th>If you did this today…</th><th>Log these PCs</th><th style="width:60px">Done</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Reviewed or prepared a Client–Architect Agreement (CAA / fee letter)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC5','Client Architect Agreement','The formal written agreement between architect and client covering fees, scope, phases of service, procurement method and all terms and conditions. You should formally agree scope in writing before starting work.')">PC5</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Prepared a fee proposal or resource schedule</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC4','Project Resource Planning','Working out how many staff hours a project needs and what that costs, to build a competitive and profitable fee proposal. Includes staff roles, time estimates, charge-out rates and overheads.')">PC4</span><span class="pc-tag" onclick="showPC(event,'PC5','Client Architect Agreement','The formal written agreement between architect and client covering fees, scope, phases of service, procurement method and all terms and conditions.')">PC5</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Issued or responded to a scope / fee variation</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC6','Scope of Services Variations','Identifying when the agreed scope has changed, notifying the client promptly, and formally documenting and obtaining written approval for the variation before proceeding.')">PC6</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Prepared or updated a project plan / program / plan of work</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC3','Project Planning','Creating a clear roadmap for a project from inception to completion — tasks, milestones, stakeholder interactions, approvals, Country and sustainability implications.')">PC3</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Allocated staff or reviewed team resourcing</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC4','Project Resource Planning','Working out how many staff hours a project needs and what that costs, to build a competitive and profitable fee proposal.')">PC4</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Reviewed professional obligations, registration, or code of conduct</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC1','Regulatory Requirements & Obligations','Knowing and complying with all laws, regulations and professional obligations that govern being an architect — Architects Acts, codes of conduct, CPD, PII, employment standards.')">PC1</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Completed CPD or reviewed continuing education obligations</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC1','Regulatory Requirements & Obligations','Knowing and complying with all laws, regulations and professional obligations — including maintaining CPD requirements and professional indemnity insurance.')">PC1</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Reviewed QA processes, checklists, or document control procedures</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC2','Quality Assurance Systems','Using structured methods and procedures to ensure work is delivered efficiently, consistently and to a high standard — includes QA checklists, document control, and ethical employment practices.')">PC2</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Discussed or recommended a procurement method to a client</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC9','Procurement Methods','Understanding lump sum, design & construct, cost plus and other methods — their impact on risk, quality, time and cost — and selecting the most appropriate for the project.')">PC9</span><span class="pc-tag" onclick="showPC(event,'PC11','Procurement Process','Assessing procurement options and advising the client so they can make an informed decision, then structuring design, documentation and delivery accordingly.')">PC11</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Assessed whole life carbon or lifecycle sustainability implications</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC10','Whole Life Carbon','Understanding total greenhouse gas emissions from a building across its entire life — materials, construction, use, end-of-life — and how design and procurement choices affect this.')">PC10</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Reviewed project insurance, risks, or safety in design</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC16','Risk Management','Identifying and managing risks across practice — safety in design, project risks, climate resilience (bushfire, flood), and ensuring appropriate insurance cover.')">PC16</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Communicated with the client or sought their written approval</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC7','Client / Stakeholder Communications & Approvals','Keeping clients consistently informed throughout a project and obtaining formal written approval before progressing to the next phase.')">PC7</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Reviewed copyright, moral rights, or IP in project documentation</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC15','Copyright & Moral Rights','Understanding copyright, moral rights and IP obligations — including First Nations cultural knowledge — and including appropriate clauses in the CAA.')">PC15</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Identified or disclosed a conflict of interest</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC22','Conflicts of Interest','Proactively identifying and managing any real or perceived conflicts of interest and disclosing them to the client, particularly at contractor selection stage.')">PC22</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Set up or applied construction administration systems / templates</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC14','Construction Services / Contract Admin Systems','Setting up the systems, processes and template documents needed for construction phase services and contract administration — RFIs, progress certificates, instructions, registers.')">PC14</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Reviewed or planned First Nations engagement processes</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC8','First Nations Engagement Processes','Designing and implementing genuine, culturally safe engagement with Aboriginal and Torres Strait Islander peoples — including identifying Knowledge Holders and building an engagement plan.')">PC8</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Reviewed building codes, NCC, or statutory requirements for a project</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC12','Statutory Requirements / Building Codes','Applying all relevant building codes (NCC), Australian Standards, planning laws and climate regulations across all aspects of a project.')">PC12</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Planned documentation strategy or set up a document program</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC13','Documentation Processes','Planning how architectural documentation is produced across all project stages — deliverables lists, responsibilities, consultant coordination, and quality checkpoints.')">PC13</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     S2 – FEASIBILITY & CONCEPT DESIGN
+═══════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-title">Feasibility &amp; Concept Design</div>
+  <div class="section-sub">PC 17–29 · Use when understanding the project and generating design ideas</div>
+  <div class="section-shortcut sc2">💡 Shortcut: If your day involved site analysis, briefs, or concept sketches → PC 17–29</div>
+
+  <table class="log-table t2">
+    <thead><tr><th>If you did this today…</th><th>Log these PCs</th><th style="width:60px">Done</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Prepared or reviewed a return brief / PPR</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC23','Return Brief','Translating the client brief into a detailed, structured return brief — critically analysed, tracking design changes and signed off at key milestones.')">PC23</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Analysed the site (orientation, access, topography, constraints)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC26','Site, Cultural & Contextual Analysis','A thorough multi-layered analysis of a site — physical environment, cultural significance, historical context, planning framework — to establish design criteria.')">PC26</span><span class="pc-tag" onclick="showPC(event,'PC30','Project Siting','Exploring and evaluating options for how and where a project sits on site, balancing physical, cultural, regulatory, environmental and economic factors.')">PC30</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Investigated planning controls, zoning, or development overlays</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC19','Project Feasibility Assessments','Evaluating a site and brief to determine development viability — planning controls, site constraints, environmental factors, and preliminary cost analysis.')">PC19</span><span class="pc-tag" onclick="showPC(event,'PC32','Planning Principles / Statutory Planning','Applying state/territory and local planning controls to establish a compliant building envelope and conceptual design parameters.')">PC32</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Researched heritage, cultural context, or First Nations connections to site</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC26','Site, Cultural & Contextual Analysis','Examining cultural significance, First Nations knowledge, historical development patterns and heritage significance of a site.')">PC26</span><span class="pc-tag" onclick="showPC(event,'PC17','Caring for Country','Understanding First Nations Peoples\' connection to Country and how their aspirations for Country can inform and guide architectural design.')">PC17</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Developed concept sketches, diagrams, or early design ideas</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC18','Iterative Concept Design Processes','Developing and refining concept design options through a research-led, iterative process that tests ideas against project criteria.')">PC18</span><span class="pc-tag" onclick="showPC(event,'PC24','Project Development Options','Generating and evaluating multiple design options in response to brief, budget, sustainability and site constraints.')">PC24</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Presented concept design options to the client or stakeholders</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC34','Communication with Stakeholders','Presenting conceptual design proposals using appropriate verbal, written and visual methods that are culturally responsive to each audience.')">PC34</span><span class="pc-tag" onclick="showPC(event,'PC18','Iterative Concept Design Processes','Developing and refining concept design options and presenting them with appropriate techniques.')">PC18</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Researched precedents, typologies, or architectural theory</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC25','History & Theory of Architecture','Drawing on architectural history and theory — precedents, typologies, cultural meanings, material histories — to inform and develop concept designs.')">PC25</span><span class="pc-tag" onclick="showPC(event,'PC28','Preliminary Design Research','Drawing on building science, environmental science and social/behavioural research to set design criteria and optimise the project concept.')">PC28</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Conducted or prepared a feasibility study</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC19','Project Feasibility Assessments','Evaluating a site and brief to determine development viability — planning controls, site constraints, environmental factors, preliminary costs.')">PC19</span><span class="pc-tag" onclick="showPC(event,'PC24','Project Development Options','Generating and evaluating multiple design options in response to brief, budget, sustainability and constraints.')">PC24</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Discussed project budget with client or prepared early cost estimate</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC20','Project Budgets','Assessing how legislative, regulatory and site-specific requirements will impact the client\'s project budget and timeframe.')">PC20</span><span class="pc-tag" onclick="showPC(event,'PC21','Establishing Project Budgets','Applying cost planning knowledge and working with quantity surveyors to establish a realistic project budget.')">PC21</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Evaluated design options against heritage, cultural or community values</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC29','Evaluation of Design Options','Assessing design options against cultural, heritage and community values of the site to produce more responsive and equitable outcomes.')">PC29</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Engaged with or prepared engagement plan for First Nations community</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC27','First Nations Engagement Processes (Concept)','Embedding the knowledge, worldviews and perspectives of Aboriginal and Torres Strait Islander Peoples into the conceptual design through respectful engagement.')">PC27</span><span class="pc-tag" onclick="showPC(event,'PC8','First Nations Engagement Processes','Designing and implementing genuine, culturally safe engagement processes with Aboriginal and Torres Strait Islander peoples.')">PC8</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     S3 – PLANNING, SUSTAINABILITY & DESIGN DEV
+═══════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-title">Planning, Sustainability &amp; Design Development</div>
+  <div class="section-sub">PC 30–35 · Use when design is becoming more resolved and environmental performance is being considered</div>
+  <div class="section-shortcut sc3">💡 Shortcut: If your day involved planning compliance or sustainability → PC 30–35</div>
+
+  <table class="log-table t3">
+    <thead><tr><th>If you did this today…</th><th>Log these PCs</th><th style="width:60px">Done</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Explored options for positioning / siting the building on site</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC30','Project Siting','Exploring and evaluating options for how and where a project sits on site — balancing topography, cultural, regulatory, environmental and economic factors.')">PC30</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Applied planning controls to develop the building envelope or massing</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC32','Planning Principles / Statutory Planning','Applying state/territory and local planning controls to a specific site to establish a compliant building envelope and design parameters.')">PC32</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Studied passive solar, daylighting, overshadowing, or thermal performance</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC31','Environmental Sustainability','Identifying and integrating sustainability factors — energy, water, waste, carbon, resource depletion — across the full lifecycle of a project.')">PC31</span><span class="pc-tag" onclick="showPC(event,'PC33','Integration of Sustainable Environmental Systems','Investigating and incorporating sustainable environmental systems — water, thermal, lighting, acoustics — into the concept design with specialist consultants.')">PC33</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Integrated sustainability systems (HVAC, water, lighting, acoustics)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC33','Integration of Sustainable Environmental Systems','Investigating and incorporating sustainable environmental systems into the concept design, including coordinating specialist consultant advice.')">PC33</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Assessed embodied carbon or evaluated material sustainability</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC35','Operational & Embodied Carbon','Assessing operational and embodied carbon of materials, components and systems — integrating specialist advice to work towards net zero whole life carbon.')">PC35</span><span class="pc-tag" onclick="showPC(event,'PC10','Whole Life Carbon','Understanding total greenhouse gas emissions across a building\'s entire life and how procurement and design choices influence this.')">PC10</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Analysed lifecycle impacts of design decisions (energy, water, waste)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC31','Environmental Sustainability','Identifying, analysing and integrating environmental sustainability factors across the full lifecycle — using specialist consultant modelling and LCA.')">PC31</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Prepared research from building science, environmental or social science</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC28','Preliminary Design Research','Drawing on building science, environmental science and social/behavioural research to set performance-focused design criteria.')">PC28</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     S4 – DOCUMENTATION & CONSULTANT COORD
+═══════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-title">Documentation &amp; Consultant Coordination</div>
+  <div class="section-sub">PC 36–47 · Use when producing drawings or coordinating consultants</div>
+  <div class="section-shortcut sc4">💡 Shortcut: If your day involved Revit / drawings / consultants → PC 36–47</div>
+
+  <table class="log-table t4">
+    <thead><tr><th>If you did this today…</th><th>Log these PCs</th><th style="width:60px">Done</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Produced working drawings / construction documentation (Revit, CAD)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC37','Documentation Appropriate for Construction','Producing timely, complete, accurate and coordinated IFC documentation — drawings, specifications and schedules — that contractors can use to price and build.')">PC37</span><span class="pc-tag" onclick="showPC(event,'PC46','Project Documentation','Producing the full suite of documentation — drawings, specs, schedules, models, reports — that meets contract requirements and procurement method.')">PC46</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Selected or specified materials, finishes, or construction systems</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC39','Material Selections / Structural & Construction Systems','Integrating material choices and structural systems into detailed design and documentation, coordinating with specialist consultants.')">PC39</span><span class="pc-tag" onclick="showPC(event,'PC45','Quality & Performance Standards','Selecting materials and systems that meet NCC and Australian Standards while considering impacts on Country and whole life carbon.')">PC45</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Coordinated with structural engineer or services consultant</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC41','Consultant Coordination','Coordinating and integrating input from structural, services and other specialist consultants into detailed design and construction documentation.')">PC41</span><span class="pc-tag" onclick="showPC(event,'PC44','Consultants','Maintaining clear communication in coordinating specialist consultants, manufacturers and suppliers under the architect\'s terms of engagement.')">PC44</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Prepared or lodged planning permit drawings / DA documentation</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC42','Planning Applications','Preparing and submitting planning / development applications that comply with all statutory planning requirements and authority requirements.')">PC42</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Prepared or updated design presentation for client approval</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC40','Design Presentations to Stakeholders','Resolving and presenting a coherent detailed design to obtain informed client and stakeholder approvals before proceeding.')">PC40</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Reviewed drawings for accuracy / QA checked documentation before issue</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC47','Accurate Documents','Delivering on-time, accurate and complete documentation through quality review processes — checking, records, programs and resourcing schedules.')">PC47</span><span class="pc-tag" onclick="showPC(event,'PC37','Documentation Appropriate for Construction','Undertaking document reviews for completeness, accuracy and NCC compliance before issue.')">PC37</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Adjusted design to meet project budget (value management)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC38','Value Management Processes','Designing within budget and time constraints while protecting the client\'s key project requirements and design intent.')">PC38</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Continued engagement with First Nations community during detailed design</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC36','Engagement with First Nations Peoples','Continued genuine engagement with Aboriginal and Torres Strait Islander Peoples throughout detailed design to embed cultural knowledge in the project.')">PC36</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Collaborated with an early contractor on buildability or cost (ECI)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC43','Early Contractor Involvement','Collaborating with a contractor engaged early in the project to obtain specialist knowledge on construction methodology, supply chain, staging and cost.')">PC43</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     S5 – CONSTRUCTION & CONTRACT ADMIN
+═══════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-title">Construction &amp; Contract Administration</div>
+  <div class="section-sub">PC 48–60 · Use when construction has started or you are administering the contract</div>
+  <div class="section-shortcut sc5">💡 Shortcut: If your day involved site visits or builder coordination → PC 48–60</div>
+
+  <table class="log-table t5">
+    <thead><tr><th>If you did this today…</th><th>Log these PCs</th><th style="width:60px">Done</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Visited the construction site to monitor progress or quality</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC54','Periodic Site Visits','Monitoring construction progress and quality through regular site visits, observing conformity to design intent and raising quality issues with the contractor and client.')">PC54</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Prepared a site report or meeting minutes</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC55','Record Keeping & Document Control','Applying consistent document control and record-keeping processes during construction — revision control, transmittals and comprehensive project filing.')">PC55</span><span class="pc-tag" onclick="showPC(event,'PC59','Preparing & Recording Documentation','Maintaining thorough records of all architectural services — correspondence, instructions, meeting notes, journals — in compliance with Architects Act obligations.')">PC59</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Issued an architect's instruction (AI / SI)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC57','Contract Administration','Applying all contract admin processes — instructions, progress claims certification, variations, extensions of time, practical completion — strictly per the construction contract.')">PC57</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Assessed or certified a progress claim</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC57','Contract Administration','Issuing instructions, certifying monetary progress claims, assessing variations and extensions of time, strictly per the construction contract.')">PC57</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Reviewed or responded to a RFI / shop drawing</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC57','Contract Administration','Responding to contractor requests for information (RFIs) and reviewing shop drawings as part of construction contract administration duties.')">PC57</span><span class="pc-tag" onclick="showPC(event,'PC54','Periodic Site Visits','Construction phase services including responding to RFIs and reviewing shop drawings to ensure conformity to design intent.')">PC54</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Assessed or issued a variation / extension of time</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC57','Contract Administration','Assessing variations (contract price adjustments) and extension of time claims strictly in accordance with the construction contract.')">PC57</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Identified or documented construction defects</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC56','Identification of Defects','Identifying and reporting defective building work, managing the rectification process, and conducting defects inspections at practical completion and end of defect liability period.')">PC56</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Managed tender evaluation or contractor selection process</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC51','Contractor Selection','Advising the client and leading the selection of a qualified contractor through a fair, ethical tendering process appropriate to the procurement method.')">PC51</span><span class="pc-tag" onclick="showPC(event,'PC52','Contractual Relationship Defined by Procurement Method','Applying the principles of the selected procurement method and associated construction contract, including how risk allocation and the architect\'s role differ.')">PC52</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Issued a certificate of practical completion</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC57','Contract Administration','Issuing Certificate of Practical Completion and Final Certificate at project close as part of contract administration duties.')">PC57</span><span class="pc-tag" onclick="showPC(event,'PC58','Contract Documents for Contract Completion','Collating all documentation required at contract completion — as-built drawings, warranties, manuals, statutory approvals, occupancy permits.')">PC58</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Prepared or collated as-built documentation or handover pack</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC58','Contract Documents for Contract Completion','Collating and issuing all documentation at contract completion — as-built drawings, warranties, operation manuals, statutory approvals.')">PC58</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Applied document control (transmittals, revision tracking, filing)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC55','Record Keeping & Document Control','Applying consistent document control during construction — revision identifiers, clouding, transmittals, and a logical project filing system.')">PC55</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Set up project team structure or admin systems for construction</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC49','Project Team Structures','Building and managing a project team with the right roles, skills and accountability structures to deliver professional services through construction.')">PC49</span><span class="pc-tag" onclick="showPC(event,'PC48','Procurement Method Implications for Project Delivery','Selecting appropriate project admin systems based on the chosen procurement method and its specific obligations during project delivery.')">PC48</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Continued engagement with First Nations community during construction</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC50','Continued Engagement with First Nations Peoples','Maintaining genuine and ongoing engagement with Aboriginal and Torres Strait Islander Peoples through all project stages including construction and completion.')">PC50</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Conducted or participated in a post-occupancy evaluation (POE)</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC60','Post Occupancy Evaluation','Applying rigorous POE methodologies to assess a completed building\'s actual performance against intended criteria and feeding lessons back into practice.')">PC60</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+      <tr onclick="toggleRow(this)"><td class="task-cell">Advised client on procurement method implications during construction</td><td><div class="pc-tags"><span class="pc-tag" onclick="showPC(event,'PC53','Advice to Client on Procurement Methods','Providing objective advice on how the chosen procurement method affects cost certainty, time, design control and quality during construction.')">PC53</span></div></td><td class="done-cell"><button class="check-btn" onclick="checkBtn(event,this)">✓</button></td><td class="notes-cell"><textarea class="notes-input" onclick="event.stopPropagation()" placeholder="Notes…"></textarea></td></tr>
+    </tbody>
+  </table>
+</div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════
+     S6 – PC REFERENCE (ALL 60 PCs)
+═══════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-title">PC Reference</div>
+  <div class="section-sub">All 60 Performance Criteria · Full competency tables &amp; graduation examples from the NSCA Explanatory Notes</div>
+  <div class="section-shortcut sc6">📋 Use this as a quick reference for what each PC requires at graduation, registration &amp; post-registration</div>
+
+  <!-- GROUP: PRACTICE & PROJECT MANAGEMENT (PC 1–16) -->
+  <table class="pc-ref-table t6">
+    <thead>
+      <tr>
+        <th style="width:52px">PC</th>
+        <th style="width:160px">Name</th>
+        <th class="col-grad" style="width:22%">On graduation</th>
+        <th class="col-reg" style="width:22%">At registration</th>
+        <th class="col-post" style="width:22%">Post registration</th>
+        <th style="width:22%">Example — At graduation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="pc-group-header"><td colspan="6">Practice &amp; Project Management · PC 1–16</td></tr>
+
+      <tr>
+        <td class="pc-num">PC 1</td>
+        <td class="pc-name">Regulatory Requirements &amp; Obligations</td>
+        <td class="pc-cell">Understand regulatory requirements and obligations pertaining to practice as an architect, including professional codes of conduct and obligations for CPD and PII.</td>
+        <td class="pc-cell">Demonstrate understanding of regulatory requirements, including legislation, codes of conduct, and obligations for CPD and PII.</td>
+        <td class="pc-cell">Comply with all regulatory requirements and obligations pertaining to practice as an architect, including legislation, codes of conduct, CPD and PII.</td>
+        <td class="example-cell">Awareness of the ethical criteria embedded in Architects Acts, the Architects Award, National Employment Standards and other relevant legislation (e.g. Racial Discrimination Act 1975, Sex Discrimination Act 1984).</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 2</td>
+        <td class="pc-name">Quality Assurance Systems</td>
+        <td class="pc-cell">Understand the role of quality assurance systems in facilitating efficient and timely delivery of architectural services.</td>
+        <td class="pc-cell">Identify practice resources and apply practice methods and QA systems within an ethical practice management framework to facilitate consistent delivery.</td>
+        <td class="pc-cell">Implement practice resources and apply ethical employment practice methods and QA systems to facilitate efficient, consistent and timely delivery of architectural services.</td>
+        <td class="example-cell">Explore the nature of quality assurance systems as applied to delivering standard architectural services through examination of a scenario or case study.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 3</td>
+        <td class="pc-name">Project Planning</td>
+        <td class="pc-cell">Understand the principles of project planning, considering implications for Country, environmental sustainability, communities, stakeholders and project costs.</td>
+        <td class="pc-cell">Demonstrate understanding of the principles of project planning, considering implications for Country, environmental sustainability, communities, stakeholders and project costs.</td>
+        <td class="pc-cell">Apply principles of project planning, considering implications for Country, environmental sustainability, communities, stakeholders and project costs.</td>
+        <td class="example-cell">Identify the phases of a project from inception to completion, identify tasks requiring external input, and describe deliverables — including due diligence on cultural heritage overlays, First Nations history and rights, and community/stakeholder groups.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 4</td>
+        <td class="pc-name">Project Resource Planning</td>
+        <td class="pc-cell" colspan="3">Be able to apply principles of project and staff planning and resource costs to establish realistic and achievable time frames. (Applies at registration and post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: preparation of a project resourcing schedule covering phases of service, staff roles, time estimates and staff costs including overheads and profit.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 5</td>
+        <td class="pc-name">Client Architect Agreement</td>
+        <td class="pc-cell">Understand the essential elements of a client architect agreement across the range of procurement methods and different scales and types of project.</td>
+        <td class="pc-cell">Demonstrate understanding of essential elements of a CAA and be able to explain appropriateness of different agreements in relation to scale and type, including partial services and secondary/sub-consultants.</td>
+        <td class="pc-cell">Apply essential elements of a CAA across the range of procurement methods in relation to their appropriateness to the scale and type of the project.</td>
+        <td class="example-cell">Develop a draft Client Architect Agreement, with appropriate recognition of the particular project type, fee structure and architectural services undertaken in each phase.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 6</td>
+        <td class="pc-name">Scope of Services Variations</td>
+        <td class="pc-cell">Understand appropriate processes for reporting and varying the scope of services provided by an architect.</td>
+        <td class="pc-cell">Demonstrate understanding of appropriate processes for reporting and varying scope of services.</td>
+        <td class="pc-cell">Apply appropriate processes for reporting and varying the scope of services provided by an architect.</td>
+        <td class="example-cell">Develop a draft Client Architect Agreement, with appropriate recognition of the contract terms to vary the scope of services included in the agreement.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 7</td>
+        <td class="pc-name">Client / Stakeholder Communications &amp; Approvals</td>
+        <td class="pc-cell">Understand appropriate processes for clear and consistent communication with clients and relevant stakeholders, including obtaining approvals.</td>
+        <td class="pc-cell" colspan="2">Apply and follow processes for clear and consistent communication with clients and relevant stakeholders throughout the project, including obtaining approvals. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">Demonstrate awareness of the obligation to keep the client and stakeholders informed and seek approval embedded in the relevant Architects Acts and codes of conduct, and awareness of appropriate modes of communication.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 8</td>
+        <td class="pc-name">First Nations Engagement Processes</td>
+        <td class="pc-cell">Understand how to implement culturally responsive and meaningful engagement processes that respect the importance of Country and reciprocal relationships with Aboriginal and Torres Strait Islander Peoples.</td>
+        <td class="pc-cell" colspan="2">Be able to implement culturally responsive and meaningful engagement processes that respect the importance of Country and reciprocal relationships with Aboriginal and Torres Strait Islander Peoples. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">Engage with First Nations authored books, articles and audio-visuals to build understanding of social, cultural and historical contexts. Write a culturally responsive engagement plan for a studio project.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 9</td>
+        <td class="pc-name">Procurement Methods</td>
+        <td class="pc-cell">Understand contemporary and emerging building procurement methods — including identifying appropriate delivery forms, risks, mitigation/adaptation strategies, and appropriate contracts and agreements.</td>
+        <td class="pc-cell">Demonstrate understanding and identify the most appropriate delivery form for a project, integrating appropriate construction contracts and consultancy agreements.</td>
+        <td class="pc-cell">Apply contemporary and emerging procurement methods, identifying the most appropriate delivery form, risks, mitigation strategies and contracts.</td>
+        <td class="example-cell">Explore the advantages and disadvantages of various procurement methods (fixed lump sum, D&amp;C, cost plus, turnkey) and map them against stages of architectural services.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 10</td>
+        <td class="pc-name">Whole Life Carbon</td>
+        <td class="pc-cell">Understand the whole life carbon implications of procurement methods, materials, components and construction systems.</td>
+        <td class="pc-cell" colspan="2">Demonstrate understanding of the WLC implications of procurement methods, materials, components and construction systems. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">Explain the key concepts of embodied and operational carbon through exploration of a case study or design report that considers WLC with commentary on building materials, components and/or construction systems.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 11</td>
+        <td class="pc-name">Procurement Process</td>
+        <td class="pc-cell" colspan="3">Assess, recommend and/or select an appropriate procurement process, considering its impact on all phases of a project — design, documentation and delivery — and advise the client on scope of service for consultants. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: explain key information to deliver a medium–large commercial development under design and construct — describing how design, documentation and delivery services are provided and the expected scope for structural and services engineers.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 12</td>
+        <td class="pc-name">Statutory Requirements / Building Codes</td>
+        <td class="pc-cell">Understand how relevant building codes, standards and planning controls apply across architectural practice, including climate change implications, fire safety, and universal access.</td>
+        <td class="pc-cell" colspan="2">Provide independent, culturally responsive and objective advice in accordance with relevant building codes, standards, technical specifications and planning regulations, including climate change implications. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">Prepare a concept design for a building typology with specific planning or siting controls, with design responses that include core themes such as climate change, fire egress and universal access.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 13</td>
+        <td class="pc-name">Documentation Processes</td>
+        <td class="pc-cell">Have knowledge of documentation processes that facilitate project delivery appropriate to selected procurement processes.</td>
+        <td class="pc-cell" colspan="2">Identify and apply strategies, programming and processes for documentation through all project stages to facilitate project delivery, as appropriate to selected procurement processes. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">Demonstrate awareness of the different types of documentation required under each phase of architectural service, explaining their purpose and the external processes required — and map changes in documentation delivery between lump sum and D&amp;C procurement.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 14</td>
+        <td class="pc-name">Construction Services / Contract Admin Systems</td>
+        <td class="pc-cell" colspan="3">Identify and apply construction services provisions and/or construction administration systems needed to fulfil all obligations appropriate to the procurement process in accordance with the terms of the agreement. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: identify the activities required for construction phase services, describe appropriate processes/documentation for executing obligations under the contract, and establish template documents and filing systems.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 15</td>
+        <td class="pc-name">Copyright &amp; Moral Rights</td>
+        <td class="pc-cell">Understand legal and ethical obligations relating to copyright, moral rights, authorship of cultural knowledge and intellectual property requirements across architectural services.</td>
+        <td class="pc-cell" colspan="2">Comply with legal and ethical obligations relating to copyright, moral rights, authorship of cultural knowledge and intellectual property requirements. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">Undertake a cultural risk assessment in a studio project or written work to demonstrate understanding of legal and ethical obligations relating to copyright, moral rights, IP and authorship of cultural knowledge.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 16</td>
+        <td class="pc-name">Risk Management</td>
+        <td class="pc-cell">Understand risk management and mitigation principles and strategies across architectural services — including safety in design, project risk, resilience from climate change impacts and appropriate insurances.</td>
+        <td class="pc-cell" colspan="2">Apply risk management and mitigation strategies across architectural services — including safety in design, project risk, resilience from climate change impacts and appropriate insurances. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">Examine case studies describing a risk management process with mitigation strategies for climate change impacts on a building, and analyse designers' obligations for safety in design with examples of hazards and risk minimisation for a simple building typology.</td>
+      </tr>
+
+      <!-- GROUP: PROJECT INITIATION & CONCEPT DESIGN (PC 17–35) -->
+      <tr class="pc-group-header"><td colspan="6">Project Initiation &amp; Conceptual Design · PC 17–35</td></tr>
+
+      <tr>
+        <td class="pc-num">PC 17</td>
+        <td class="pc-name">Caring for Country</td>
+        <td class="pc-cell" colspan="3">Have an understanding of Aboriginal and Torres Strait Islander Peoples' aspirations to care for Country and how these inform architectural design. (All levels.)</td>
+        <td class="example-cell">Identify opportunities to partner with First Nations communities to inform projects about their visions for Country, or engage with First Nations authored resources. Demonstrate through a report or case study.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 18</td>
+        <td class="pc-name">Iterative Concept Design Processes</td>
+        <td class="pc-cell" colspan="3">Apply creative imagination, design precedents, research, emergent knowledge and critical evaluation in formulating and refining concept design options, including exploration of three-dimensional form and spatial quality. (All levels.)</td>
+        <td class="example-cell">Prepare concept design options employing appropriate presentation techniques that explore responses to specific project criteria (brief, budget, site analysis, planning controls, client aspirations) and evaluate them using comparative measures.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 19</td>
+        <td class="pc-name">Project Feasibility Assessments</td>
+        <td class="pc-cell">Understand the purpose of project feasibility assessments, including research of site constraints, opportunities and risks, and methods of determining preliminary cost analysis.</td>
+        <td class="pc-cell" colspan="2">Identify, analyse and evaluate client project requirements and objectives using qualitative and quantitative methods and, where required, assist cost estimators in determining project feasibility/viability.</td>
+        <td class="example-cell">Prepare a portfolio tracking the design process for a studio project — including detailed site analysis, planning control research, evaluation of applicable building typologies, and exploring how architects describe projects through area scheduling and published cost per m² rates.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 20</td>
+        <td class="pc-name">Project Budgets</td>
+        <td class="pc-cell" colspan="3">Assess project budget and timeframe against project requirements and objectives, relevant legislation, statutory planning requirements, building codes and standards. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: identify legislative, statutory and building code requirements specific to a project that would create additional cost or programming requirements (e.g. bushfire zone site).</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 21</td>
+        <td class="pc-name">Establishing Project Budgets</td>
+        <td class="pc-cell" colspan="3">Apply project budgets, or work with a quantity surveyor to establish project budgets, based upon understanding of cost planning, value management and factors influencing project cost. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: prepare feasibility studies and concept documentation exploring responses to specific criteria and evaluate them using comparative area schedules or qualitative descriptors to assist cost consultants determine project budget.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 22</td>
+        <td class="pc-name">Conflicts of Interest</td>
+        <td class="pc-cell" colspan="3">Identify and manage risks arising from real or perceived conflicts of interest. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: define what constitutes a real and perceived conflict of interest and describe scenarios where a conflict of interest could arise.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 23</td>
+        <td class="pc-name">Return Brief</td>
+        <td class="pc-cell">Understand the purpose and process of generating a return brief for approval by the client and relevant stakeholders, including awareness of the implications of non-compliance.</td>
+        <td class="pc-cell" colspan="2">Prepare a return brief for approval by the client and relevant stakeholders in response to a client brief and any areas of deviation or non-compliance. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">Examine the component parts of a return brief and analyse why certain information is included and how it shapes the development of a project.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 24</td>
+        <td class="pc-name">Project Development Options</td>
+        <td class="pc-cell">Understand how to identify and evaluate project development options in response to a project brief — objectives, budget, user intent, built purpose, risks, timeframe and environmental sustainability.</td>
+        <td class="pc-cell" colspan="2">Prepare and analyse project development options in response to a project brief — objectives, budget, user intent, built purpose, risks, timeframes and environmental sustainability.</td>
+        <td class="example-cell">Present a portfolio tracking the design process for a studio project, showing generation of alternative options, their rigorous assessment and subsequent design responses.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 25</td>
+        <td class="pc-name">History &amp; Theory of Architecture</td>
+        <td class="pc-cell" colspan="3">Draw on knowledge from the history and theory of architecture as part of preliminary design research and when developing the conceptual design. (All levels.)</td>
+        <td class="example-cell">Prepare concept design studies, diagrams and sketches that encompass and express historical and contemporary thinking — including how social, cultural and ethical values may be addressed through case studies, precedents and typologies.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 26</td>
+        <td class="pc-name">Site, Cultural &amp; Contextual Analysis</td>
+        <td class="pc-cell" colspan="3">Undertake site, cultural and contextual analysis as part of preliminary design research. (All levels.)</td>
+        <td class="example-cell">Use project work to describe how physical, environmental, social and historical aspects of a site were understood through research of site history, cultural observations, contextual analysis and synthesis of findings.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 27</td>
+        <td class="pc-name">First Nations Engagement (Concept)</td>
+        <td class="pc-cell" colspan="3">Understand how to embed the knowledge, worldviews and perspectives of Aboriginal and Torres Strait Islander Peoples, shared through engagement, into the conceptual design in a meaningful, respectful and appropriate way. (All levels.)</td>
+        <td class="example-cell">Engage critically with First Nations' designs, literature and projects; use culturally responsible language in spoken and written contexts, embedded into a conceptual design.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 28</td>
+        <td class="pc-name">Preliminary Design Research</td>
+        <td class="pc-cell" colspan="3">Draw on knowledge from building sciences and technology, environmental sciences and behavioural and social sciences as part of preliminary design research and when developing the conceptual design to optimise project performance. (All levels.)</td>
+        <td class="example-cell">Develop a return brief including design criteria born of research into building sciences, environmental sciences and behavioural/social sciences, and prepare a concept design report evaluating options against that criteria.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 29</td>
+        <td class="pc-name">Evaluation of Design Options</td>
+        <td class="pc-cell" colspan="3">Develop and evaluate design options in terms of the heritage, cultural and community values embodied in the site, and in relation to project requirements. (All levels.)</td>
+        <td class="example-cell">Present a studio project or oral/written report examining the role of broad site analysis in establishing design parameters, including research of historical/cultural influences and how architects respond to community needs.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 30</td>
+        <td class="pc-name">Project Siting</td>
+        <td class="pc-cell" colspan="3">Explore options for siting a project, including integrating information and analysis of relevant cultural, social and economic factors. (All levels.)</td>
+        <td class="example-cell">Prepare site analysis diagrams describing opportunities and constraints, with evaluation of criteria as a basis for decisions about preferred project siting.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 31</td>
+        <td class="pc-name">Environmental Sustainability</td>
+        <td class="pc-cell" colspan="3">Identify, analyse and integrate information relevant to environmental sustainability — energy and water consumption, resources depletion, waste, embodied carbon and carbon emissions — over the life cycle of a project. (All levels.)</td>
+        <td class="example-cell">Prepare a case study or design report considering a building's environmental performance over lifecycle stages, analysing relevant factors for the context, brief, climate and building type (e.g. carbon, waste, energy, water).</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 32</td>
+        <td class="pc-name">Planning Principles / Statutory Planning</td>
+        <td class="pc-cell" colspan="3">Apply planning principles and statutory planning requirements to the site and conceptual design of the project. (All levels.)</td>
+        <td class="example-cell">Prepare a report or feasibility study for a specific site by researching and applying statutory planning controls. Design response should include consideration of site constraints and planning principles informing the building envelope.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 33</td>
+        <td class="pc-name">Integration of Sustainable Environmental Systems</td>
+        <td class="pc-cell">Investigate, coordinate and integrate sustainable environmental systems — water, thermal, lighting and acoustics — into the conceptual design.</td>
+        <td class="pc-cell" colspan="2">Investigate, coordinate and integrate sustainable environmental systems — water, thermal, lighting and acoustics — in response to consultants' advice.</td>
+        <td class="example-cell">Present a studio project or case study investigating a range of environmental systems (water, thermal, lighting, acoustics), defining the required specialist consultants and exploring how those systems are integrated into a concept design.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 34</td>
+        <td class="pc-name">Communication with Stakeholders</td>
+        <td class="pc-cell">Apply principles and methodologies for presenting conceptual design proposals to clients, stakeholders and communities, using culturally responsive methods appropriate to different audiences.</td>
+        <td class="pc-cell" colspan="2">Communicate conceptual design proposals using appropriate and culturally responsive methods appropriate to different audiences. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">Learn about the key concepts of cultural responsiveness — identifying cultural biases and examining appropriate language and presentation techniques to convey design ideas to different audiences.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 35</td>
+        <td class="pc-name">Operational &amp; Embodied Carbon</td>
+        <td class="pc-cell">Understand the operational and embodied carbon implications of chosen materials, components and systems.</td>
+        <td class="pc-cell" colspan="2">Assess the operational and embodied carbon implications of materials, components, construction systems and supply chains (including transport) to achieve net zero whole life carbon when developing design concepts.</td>
+        <td class="example-cell">Prepare reports, case studies or design exercises that consider the operational and embodied carbon of a building, including commentary on how different design decisions, materials or systems impact carbon outcomes.</td>
+      </tr>
+
+      <!-- GROUP: DETAILED DESIGN & CONSTRUCTION DOCUMENTATION (PC 36–47) -->
+      <tr class="pc-group-header"><td colspan="6">Detailed Design &amp; Construction Documentation · PC 36–47</td></tr>
+
+      <tr>
+        <td class="pc-num">PC 36</td>
+        <td class="pc-name">Engagement with First Nations Peoples</td>
+        <td class="pc-cell" colspan="3">Apply creative imagination, design precedents, emergent knowledge, critical evaluation and continued engagement with Aboriginal and Torres Strait Islander Peoples to produce a coherent project design. (All levels.)</td>
+        <td class="example-cell">Identify many forms of cultural representation and expression in projects (spatial, material, cultural practices). Engage with First Nations authored resources to raise self-awareness of values and laws, and demonstrate these learnings through the detailed design stage.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 37</td>
+        <td class="pc-name">Documentation Appropriate for Construction</td>
+        <td class="pc-cell" colspan="3">Produce timely, accurate, complete and comprehensible documentation of the design so that it can be constructed. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: prepare IFC documents (drawings, specifications, schedules) with appropriate level of detail — e.g. setout drawings, door/window schedules, reflected ceiling plans, statutory signage schedules.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 38</td>
+        <td class="pc-name">Value Management Processes</td>
+        <td class="pc-cell" colspan="3">Work within budget and time constraints while maintaining the defined project design intent, including participating in value management processes where engaged. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: prepare design options that explore responses to budget/program criteria, evaluate using comparative area schedules, and prepare design options based on costing feedback as part of a value management exercise.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 39</td>
+        <td class="pc-name">Material Selections / Structural &amp; Construction Systems</td>
+        <td class="pc-cell">Understand how the integration of material selection, structural and construction systems impacts on design outcomes.</td>
+        <td class="pc-cell" colspan="2">Integrate the material selection, structural and construction systems established in the conceptual design into the detailed design and documentation.</td>
+        <td class="example-cell">Present case studies or a studio design project developing concept sketches to developed design documentation, demonstrating understanding of structural considerations, materials, components and systems.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 40</td>
+        <td class="pc-name">Design Presentations to Stakeholders</td>
+        <td class="pc-cell" colspan="3">Resolve and present a coherent detailed design solution within necessary timeframes to obtain client and stakeholder approvals. (All levels.)</td>
+        <td class="example-cell">Explore what type of information requires client/stakeholder approval and identify the most appropriate forms of presenting this information in the detailed design phase, as part of a studio design project with detailed design deliverables.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 41</td>
+        <td class="pc-name">Consultant Coordination</td>
+        <td class="pc-cell" colspan="3">Coordinate and integrate input from specialists and consultants into the detailed design and documentation. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: prepare architectural drawings integrating consultant information — e.g. BIM modelling with structural/services and clash detection, concrete setout drawings showing services penetrations, coordinated reflected ceiling plans.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 42</td>
+        <td class="pc-name">Planning Applications</td>
+        <td class="pc-cell" colspan="3">Prepare planning applications that comply with planning regulations. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: prepare planning application documentation including a Planning Report to support the submission.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 43</td>
+        <td class="pc-name">Early Contractor Involvement</td>
+        <td class="pc-cell" colspan="3">Collaborate with nominated contractors early in the documentation process to identify key construction methodology opportunities and constraints. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: identify the process for engaging with the ECI contractor and define the impact on architectural services to accommodate an ECI process.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 44</td>
+        <td class="pc-name">Consultants</td>
+        <td class="pc-cell">Understand the roles and types of relevant consultants and suppliers as well as applicable construction terminology.</td>
+        <td class="pc-cell" colspan="2">Maintain effective and clear communication in the coordination of relevant consultants, manufacturers and suppliers as required under terms of engagement.</td>
+        <td class="example-cell">Identify which specialist consultants would be required for a given scenario, and identify architect and consultant responsibilities when preparing a Client Architect Agreement or consultant agreement.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 45</td>
+        <td class="pc-name">Quality &amp; Performance Standards</td>
+        <td class="pc-cell">Understand processes for selecting materials, finishes, fittings, components and systems, based on quality and performance standards, impact on Country and the environment, and whole life carbon.</td>
+        <td class="pc-cell" colspan="2">Nominate and integrate quality and performance standards for selected materials, finishes, fittings, components and systems, considering impact on Country, the environment and whole life carbon. Integrate LCAs and specialist advice.</td>
+        <td class="example-cell">Prepare specifications in a studio project establishing a rationale for each material, finish, fitting or component — including impacts on Country and beyond the carbon footprint.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 46</td>
+        <td class="pc-name">Project Documentation</td>
+        <td class="pc-cell">Understand processes for producing project documentation that meets the requirements of the contract and procurement procedure, and complies with regulatory controls and building standards.</td>
+        <td class="pc-cell" colspan="2">Produce project documentation that meets the requirements of the contract and procurement procedure, and complies with regulatory controls and building standards.</td>
+        <td class="example-cell">Map the various architectural documentation deliverables against milestones inherent in different procurement modes, and explore the different documentation types required for a particular phase of services.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 47</td>
+        <td class="pc-name">Accurate Documents</td>
+        <td class="pc-cell" colspan="3">Complete and communicate on-time, accurate documents for relevant stakeholders, including drawings, models, specifications, schedules, and construction documentation. (All levels.)</td>
+        <td class="example-cell">Present a portfolio of design drawings, model photographs and reports/specifications, showing examples of communication techniques and processes appropriate for a particular design stage.</td>
+      </tr>
+
+      <!-- GROUP: DESIGN DELIVERY & CONSTRUCTION PHASE SERVICES (PC 48–60) -->
+      <tr class="pc-group-header"><td colspan="6">Design Delivery &amp; Construction Phase Services · PC 48–60</td></tr>
+
+      <tr>
+        <td class="pc-num">PC 48</td>
+        <td class="pc-name">Procurement Method Implications for Project Delivery</td>
+        <td class="pc-cell">Understand available procurement methods and their application to project delivery, considering project type, scale and contractor coordination.</td>
+        <td class="pc-cell" colspan="2">Select and implement project administration systems, based upon assessment of the selected procurement method and its implications on project delivery.</td>
+        <td class="example-cell">Analyse and evaluate common procurement methodologies in terms of their impact on time, cost and quality — describing the risk allocation for each and determining when one method may be favoured over another.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 49</td>
+        <td class="pc-name">Project Team Structures</td>
+        <td class="pc-cell" colspan="3">Implement project team structures necessary to deliver a full suite of professional services or partial services appropriate to the selected procurement process. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: describe the roles and responsibilities of a project team and articulate how they change over the different phases of architectural service.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 50</td>
+        <td class="pc-name">Continued Engagement with First Nations Peoples</td>
+        <td class="pc-cell" colspan="3">Continue engagement with relevant Aboriginal and Torres Strait Islander Peoples throughout all stages of the project and its delivery in a meaningful, respectful and appropriate way. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: embed Traditional Custodians' values in the project values and/or embed processes in the QA system that track engagement from beginning to end — potentially including a "cultural project diary".</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 51</td>
+        <td class="pc-name">Contractor Selection</td>
+        <td class="pc-cell">Understand the process of selecting qualified contractors in accordance with an agreed procurement method and construction contract.</td>
+        <td class="pc-cell" colspan="2">Provide advice to clients and lead or contribute to the process of selecting a qualified contractor in accordance with the agreed procurement method and construction contract.</td>
+        <td class="example-cell">Examine the tender process for a lump sum contract and prepare an Information to Tender letter referencing the selected construction contract and using appropriate terminology.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 52</td>
+        <td class="pc-name">Contractual Relationship Defined by Procurement Method</td>
+        <td class="pc-cell" colspan="3">Apply the principles and mechanisms implicit in the selected procurement method and associated construction contract(s), based on an understanding of the implications of differing contractual relationships. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: analyse and evaluate the risk allocation for each party under common procurement methodologies, understand the effect of novation, and determine circumstances in which one method may be favoured over another.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 53</td>
+        <td class="pc-name">Advice to Client on Procurement Methods</td>
+        <td class="pc-cell" colspan="3">Provide advice to clients on the impact of a selected procurement method on cost, time, life cycle implications and quality control during construction. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: prepare a report articulating the advantages and disadvantages of various procurement strategies weighted against specific project criteria to enable the client to make an informed decision.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 54</td>
+        <td class="pc-name">Periodic Site Visits</td>
+        <td class="pc-cell">Understand the purpose of periodic site visits of construction works for quality assurance.</td>
+        <td class="pc-cell" colspan="2">Monitor construction progress and quality as required under the provisions of the construction contract, which may include site visits.</td>
+        <td class="example-cell">Examine an architect's duty of care or obligations to the client under a standard form of contract (e.g. a simple lump sum contract).</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 55</td>
+        <td class="pc-name">Record Keeping &amp; Document Control</td>
+        <td class="pc-cell">Understand methodologies for record keeping, document control and revision status during the construction phase.</td>
+        <td class="pc-cell" colspan="2">Apply appropriate and consistent systems for record keeping, document control and revision status during the construction phase.</td>
+        <td class="example-cell">Explore architectural documentation standards, methods for controlling documents and the consequences of not appropriately controlling documents.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 56</td>
+        <td class="pc-name">Identification of Defects</td>
+        <td class="pc-cell">Understand the purpose of identification of defects, rectifications and approval of substitutions.</td>
+        <td class="pc-cell" colspan="2">Apply appropriate and consistent systems for identification of defects, rectifications and approval of substitutions.</td>
+        <td class="example-cell">Explore the legal and ethical framework applicable to architects for identifying building defects and approving building element substitutions.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 57</td>
+        <td class="pc-name">Contract Administration</td>
+        <td class="pc-cell">Understand the principles of contract administration, including certification, variations, instructions, RFIs and practical completion.</td>
+        <td class="pc-cell" colspan="2">Apply relevant processes required for certification of monetary progress claims, project variations, extensions of time, project instructions, RFIs, practical completion and other administrative functions explicit in the construction contract.</td>
+        <td class="example-cell">Examine the processes in a standard form contract (e.g. simple lump sum) — applying liquidated damages, issuing a progress claim with cash retention, or issuing an extension of time claim in response to a given scenario.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 58</td>
+        <td class="pc-name">Contract Documents for Contract Completion</td>
+        <td class="pc-cell">Understand the contract components and the process of executing a contract, as defined within the construction contract and in accordance with relevant building and planning codes.</td>
+        <td class="pc-cell" colspan="2">Complete documentation — specifications, drawings, schedules, reports, certification and approvals — and other project information for issue to the client and relevant authorities, as required under the construction contract.</td>
+        <td class="example-cell">Complete a lump sum contract with list of contract documents using a studio project as the basis for project information, and identify which documents are required to obtain a certificate of occupancy.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 59</td>
+        <td class="pc-name">Preparing &amp; Recording Documentation</td>
+        <td class="pc-cell" colspan="3">Understand and mitigate risks associated with preparing and recording documentation. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: apply quality assurance processes across a project to manage and monitor project documentation, control documentation quality, and mitigate risks in completing compliant project documentation.</td>
+      </tr>
+
+      <tr>
+        <td class="pc-num">PC 60</td>
+        <td class="pc-name">Post Occupancy Evaluation</td>
+        <td class="pc-cell" colspan="3">Apply appropriate methodologies for undertaking post occupancy evaluations and life cycle assessment where required under terms of engagement. (Registration &amp; post-registration.)</td>
+        <td class="example-cell">At registration/post-registration: participate in a POE led by a specialist, including conducting background research using existing documentation, gathering field data, and analysing data against assessment criteria.</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- PC TOOLTIP -->
+<div class="tooltip-overlay" id="tooltipOverlay" onclick="closeTooltip(event)">
+  <div class="tooltip-box">
+    <button class="tooltip-close" onclick="closeTooltipBtn()">✕</button>
+    <div class="tooltip-pc" id="ttPC"></div>
+    <div class="tooltip-title" id="ttTitle"></div>
+    <div class="tooltip-desc" id="ttDesc"></div>
+  </div>
+</div>
+
+<script>
+  // ── STORAGE KEYS ────────────────────────────────────────────────────────
+  const STORAGE       = 'lccaa_rows';       // legacy — no longer used for per-day
+  const NOTES_STORAGE = 'lccaa_notes';      // legacy
+  const DAY_LOG_STORAGE = 'lccaa_day_logs';
+  const DAY_ROWS_STORAGE  = 'lccaa_day_rows';   // per-day checkboxes
+  const DAY_NOTES_STORAGE = 'lccaa_day_notes';  // per-day notes
+  const DRIVE_URL_KEY = 'lccaa_drive_url';
+  const SYNC_TIME_KEY = 'lccaa_last_sync';
+
+  let doneRows   = [];   // loaded per-day
+  let savedNotes = {};   // loaded per-day
+  let totalRows  = 0;
+
+  // ── WEEK & DAY ───────────────────────────────────────────────────────────
+  const DAYS      = ['mon','tue','wed','thu','fri'];
+  const DAY_LABELS = { mon:'Monday', tue:'Tuesday', wed:'Wednesday', thu:'Thursday', fri:'Friday' };
+  let weekOffset  = 0;
+  let currentDay  = 'mon';
+
+  function getWeekKey(offset) {
+    const now  = new Date();
+    const day  = now.getDay();
+    const diff = (day === 0 ? -6 : 1 - day);
+    const monday = new Date(now);
+    monday.setDate(now.getDate() + diff + offset * 7);
+    return monday.toISOString().slice(0, 10);
+  }
+
+  function getWeekLabel(offset) {
+    const key    = getWeekKey(offset);
+    const monday = new Date(key + 'T00:00:00');
+    const friday = new Date(monday);
+    friday.setDate(monday.getDate() + 4);
+    const fmt = d => d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+    if (offset === 0)  return `This week · ${fmt(monday)} – ${fmt(friday)}`;
+    if (offset === -1) return `Last week · ${fmt(monday)} – ${fmt(friday)}`;
+    return `${fmt(monday)} – ${fmt(friday)}`;
+  }
+
+  function getDayLogs() {
+    return JSON.parse(localStorage.getItem(DAY_LOG_STORAGE) || '{}');
+  }
+
+  function saveDayLogs(logs) {
+    localStorage.setItem(DAY_LOG_STORAGE, JSON.stringify(logs));
+    scheduleDriveSync();
+  }
+
+  function getDayKey() {
+    return getWeekKey(weekOffset) + '_' + currentDay;
+  }
+
+  function renderDayLog() {
+    const logs    = getDayLogs();
+    const key     = getDayKey();
+    const entries = logs[key] || [];
+    const container = document.getElementById('dayLogEntries');
+    const empty     = document.getElementById('dayLogEmpty');
+    const title     = document.getElementById('dayLogTitle');
+
+    title.textContent = DAY_LABELS[currentDay];
+
+    // Remove old entry cards but keep the empty div in the DOM
+    Array.from(container.children).forEach(child => {
+      if (child !== empty) child.remove();
+    });
+
+    if (!entries.length) {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      const cards = entries.map((e, i) => {
+        const div = document.createElement('div');
+        div.className = 'day-log-entry';
+        const isAuto = e.rowIdx !== undefined;
+        div.innerHTML = `
+          <div class="day-log-entry-badge">${escapeHtml(e.pc)}</div>
+          <div class="day-log-entry-body" style="flex:1">
+            <div class="day-log-entry-text">${escapeHtml(e.note)}</div>
+            ${isAuto ? '<div class="day-log-entry-note">↑ from checked task</div>' : ''}
+          </div>
+          <button class="day-log-entry-del" onclick="deleteDayLog(${i})" title="${isAuto ? 'Remove (will not uncheck the task)' : 'Remove'}">✕</button>`;
+        return div;
+      });
+      cards.forEach(c => container.appendChild(c));
+    }
+    updateDayDots();
+  }
+
+  function updateDayDots() {
+    const logs    = getDayLogs();
+    const weekKey = getWeekKey(weekOffset);
+    DAYS.forEach(d => {
+      const key = weekKey + '_' + d;
+      const btn = document.getElementById('dt-' + d);
+      if (btn) btn.classList.toggle('has-logs', !!(logs[key] && logs[key].length > 0));
+    });
+  }
+
+  function addDayLog() {
+    const pcRaw = document.getElementById('dayPcInput').value.trim().toUpperCase();
+    const note  = document.getElementById('dayNoteInput').value.trim();
+    if (!pcRaw) { document.getElementById('dayPcInput').focus(); return; }
+    const pc   = pcRaw.startsWith('PC') ? pcRaw : 'PC' + pcRaw.replace(/\D/g,'');
+    const logs = getDayLogs();
+    const key  = getDayKey();
+    if (!logs[key]) logs[key] = [];
+    logs[key].push({ pc, note: note || '' });
+    saveDayLogs(logs);
+    document.getElementById('dayPcInput').value  = '';
+    document.getElementById('dayNoteInput').value = '';
+    renderDayLog();
+    document.getElementById('dayPcInput').focus();
+  }
+
+  function deleteDayLog(idx) {
+    const logs = getDayLogs();
+    const key  = getDayKey();
+    if (logs[key]) { logs[key].splice(idx, 1); saveDayLogs(logs); renderDayLog(); }
+  }
+
+  function clearDayLog() {
+    if (!confirm('Clear all logged PCs for ' + DAY_LABELS[currentDay] + '?')) return;
+    const logs = getDayLogs();
+    const key  = getDayKey();
+    delete logs[key];
+    saveDayLogs(logs);
+    renderDayLog();
+  }
+
+  function selectDay(day, btn) {
+    currentDay = day;
+    document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    restoreLogbookState();
+    renderDayLog();
+    updateProgress();
+  }
+
+  function changeWeek(dir) {
+    weekOffset += dir;
+    document.getElementById('weekDisplay').textContent = getWeekLabel(weekOffset);
+    restoreLogbookState();
+    renderDayLog();
+    updateProgress();
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── GOOGLE DRIVE SYNC ────────────────────────────────────────────────────
+  let driveUrl      = localStorage.getItem(DRIVE_URL_KEY) || '';
+  let syncTimer     = null;
+  let syncPending   = false;
+
+  const APPS_SCRIPT = `// LCCAA Logbook — Google Apps Script sync
+// 1. Paste this into script.google.com (replace all existing code)
+// 2. Click Deploy > New deployment > Web app
+// 3. Set "Execute as" = Me, "Who has access" = Anyone
+// 4. Click Deploy and copy the Web App URL
+
+const FILE_NAME = 'lccaa-logbook-data.json';
+
+function doGet(e) {
+  // LOAD — return saved data
+  const file = getOrCreateFile();
+  const content = file.getBlob().getDataAsString();
+  return ContentService
+    .createTextOutput(content || '{}')
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  // SAVE — body contains JSON data
+  const file = getOrCreateFile();
+  const data = e.postData ? e.postData.contents : '{}';
+  file.setContent(data);
+  return ContentService
+    .createTextOutput(JSON.stringify({ ok: true }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function getOrCreateFile() {
+  const files = DriveApp.getFilesByName(FILE_NAME);
+  if (files.hasNext()) return files.next();
+  return DriveApp.createFile(FILE_NAME, '{}', MimeType.PLAIN_TEXT);
+}`;
+
+  function copyAppsScript(btn) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(APPS_SCRIPT).then(() => {
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy Apps Script Code', 2500);
+      }).catch(() => fallbackCopy(btn));
+    } else {
+      fallbackCopy(btn);
+    }
+  }
+
+  function fallbackCopy(btn) {
+    const ta = document.createElement('textarea');
+    ta.value = APPS_SCRIPT;
+    ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy Apps Script Code', 2500);
+    } catch(e) {
+      btn.textContent = '⚠ Copy failed — see console';
+      console.log('Apps Script code:\n', APPS_SCRIPT);
+    }
+    document.body.removeChild(ta);
+  }
+
+  function showConnectModal() {
+    document.getElementById('driveUrlInput').value = driveUrl;
+    document.getElementById('connectModal').classList.add('show');
+  }
+
+  function saveDriveUrl() {
+    const url = document.getElementById('driveUrlInput').value.trim();
+    if (!url) return;
+    driveUrl = url;
+    localStorage.setItem(DRIVE_URL_KEY, url);
+    closeModal('connectModal');
+    setSyncStatus('syncing', 'Connecting…');
+    syncNow();
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('show');
+  }
+
+  function setSyncStatus(state, label) {
+    const dot   = document.getElementById('syncDot');
+    const lbl   = document.getElementById('syncLabel');
+    dot.className = 'sync-dot' + (state ? ' ' + state : '');
+    lbl.textContent = label;
+  }
+
+  function scheduleDriveSync() {
+    if (!driveUrl) return;
+    syncPending = true;
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(syncNow, 2000); // debounce 2s
+  }
+
+  async function syncNow() {
+    if (!driveUrl) { showConnectModal(); return; }
+    setSyncStatus('syncing', 'Syncing…');
+    try {
+      // LOAD: pull remote data
+      const getResp = await fetch(driveUrl + '?action=load', { method: 'GET', redirect: 'follow' });
+      if (!getResp.ok) throw new Error('Load failed: HTTP ' + getResp.status);
+      const text = await getResp.text();
+      let remote = {};
+      try { remote = JSON.parse(text); } catch(e) { remote = {}; }
+
+      // Merge with local
+      const localData = getAllData();
+      const merged = mergeData(localData, remote);
+      applyData(merged);
+
+      // SAVE: use no-cors POST to avoid URL length limits on GET
+      // no-cors means we can't read the response, but data is saved
+      await fetch(driveUrl + '?action=save', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(merged)
+      });
+
+      const now = new Date().toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' });
+      localStorage.setItem(SYNC_TIME_KEY, now);
+      document.getElementById('syncTime').textContent = 'Last synced ' + now;
+      setSyncStatus('connected', 'Synced with Google Drive');
+      document.getElementById('connectBtn').textContent = '⚙ Drive Settings';
+      document.getElementById('syncNowBtn').style.display = '';
+      syncPending = false;
+    } catch(err) {
+      setSyncStatus('error', 'Sync failed: ' + err.message);
+      console.error('Drive sync error:', err);
+    }
+  }
+
+  function getAllData() {
+    return {
+      dayRows:  JSON.parse(localStorage.getItem(DAY_ROWS_STORAGE)  || '{}'),
+      dayNotes: JSON.parse(localStorage.getItem(DAY_NOTES_STORAGE) || '{}'),
+      dayLogs:  JSON.parse(localStorage.getItem(DAY_LOG_STORAGE)   || '{}'),
+      exportedAt: new Date().toISOString()
+    };
+  }
+
+  function mergeData(local, remote) {
+    const merged = {
+      dayRows:  Object.assign({}, remote.dayRows  || {}, local.dayRows),
+      dayNotes: Object.assign({}, remote.dayNotes || {}, local.dayNotes),
+      dayLogs:  Object.assign({}, remote.dayLogs  || {}, local.dayLogs),
+      exportedAt: new Date().toISOString()
+    };
+    return merged;
+  }
+
+  function applyData(data) {
+    if (data.dayRows)  localStorage.setItem(DAY_ROWS_STORAGE,  JSON.stringify(data.dayRows));
+    if (data.dayNotes) localStorage.setItem(DAY_NOTES_STORAGE, JSON.stringify(data.dayNotes));
+    if (data.dayLogs)  localStorage.setItem(DAY_LOG_STORAGE,   JSON.stringify(data.dayLogs));
+    restoreLogbookState();
+    renderDayLog();
+    updateProgress();
+  }
+
+  // ── EXPORT / IMPORT ──────────────────────────────────────────────────────
+  function exportData() {
+    const data = getAllData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'lccaa-logbook-export-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  let pendingImportData = null;
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!data.dayLogs && !data.rows) throw new Error('Invalid format');
+        pendingImportData = data;
+        const dayCount = Object.keys(data.dayLogs || {}).length;
+        const rowCount = (data.rows || []).length;
+        document.getElementById('importModalSub').textContent =
+          `Found ${dayCount} day log entries and ${rowCount} checked rows. This will merge with your current data. Continue?`;
+        document.getElementById('importModal').classList.add('show');
+      } catch(err) {
+        alert('Could not read file — make sure it\'s a valid LCCAA Logbook export.');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function confirmImport() {
+    if (!pendingImportData) return;
+    const local  = getAllData();
+    const merged = mergeData(local, pendingImportData);
+    applyData(merged);
+    closeModal('importModal');
+    pendingImportData = null;
+    if (driveUrl) scheduleDriveSync();
+    alert('Import complete!');
+  }
+
+  // ── LOGBOOK STATE ────────────────────────────────────────────────────────
+  function getDayRowKey() { return getWeekKey(weekOffset) + '_' + currentDay; }
+
+  function loadDayState() {
+    const allRows  = JSON.parse(localStorage.getItem(DAY_ROWS_STORAGE)  || '{}');
+    const allNotes = JSON.parse(localStorage.getItem(DAY_NOTES_STORAGE) || '{}');
+    const key = getDayRowKey();
+    doneRows   = allRows[key]  || [];
+    savedNotes = allNotes[key] || {};
+  }
+
+  function saveDayState() {
+    const allRows  = JSON.parse(localStorage.getItem(DAY_ROWS_STORAGE)  || '{}');
+    const allNotes = JSON.parse(localStorage.getItem(DAY_NOTES_STORAGE) || '{}');
+    const key = getDayRowKey();
+    allRows[key]  = doneRows;
+    allNotes[key] = savedNotes;
+    localStorage.setItem(DAY_ROWS_STORAGE,  JSON.stringify(allRows));
+    localStorage.setItem(DAY_NOTES_STORAGE, JSON.stringify(allNotes));
+    scheduleDriveSync();
+  }
+
+  function restoreLogbookState() {
+    loadDayState();
+    document.querySelectorAll('.log-table tbody tr').forEach((row, idx) => {
+      const isDone = doneRows.includes(idx);
+      row.classList.toggle('done-row', isDone);
+      const btn = row.querySelector('.check-btn');
+      if (btn) {
+        btn.style.background  = isDone ? '#22c55e' : '';
+        btn.style.borderColor = isDone ? '#22c55e' : '';
+        btn.style.color       = isDone ? '#fff'    : '';
+      }
+      const ta = row.querySelector('.notes-input');
+      if (ta) ta.value = savedNotes[idx] || '';
+    });
+  }
+
+  function getAllRows() { return [...document.querySelectorAll('.log-table tbody tr')]; }
+  function getRowIndex(row) { return getAllRows().indexOf(row); }
+
+  function toggleRow(row) {
+    const idx    = getRowIndex(row);
+    const isDone = row.classList.toggle('done-row');
+    const btn    = row.querySelector('.check-btn');
+    btn.style.background  = isDone ? '#22c55e' : '';
+    btn.style.borderColor = isDone ? '#22c55e' : '';
+    btn.style.color       = isDone ? '#fff'    : '';
+    if (isDone) { if (!doneRows.includes(idx)) doneRows.push(idx); }
+    else         { doneRows = doneRows.filter(d => d !== idx); }
+    saveDayState();
+    updateProgress();
+    syncRowToDayLog(row, idx, isDone);
+  }
+
+  function syncRowToDayLog(row, rowIdx, isDone) {
+    // Get all PC tags from this row
+    const pcTags = [...row.querySelectorAll('.pc-tag')].map(el => el.textContent.trim());
+    if (!pcTags.length) return;
+
+    // Get task description and note
+    const taskText = row.querySelector('.task-cell')?.textContent.trim() || '';
+    const noteText = row.querySelector('.notes-input')?.value.trim() || '';
+    const note = noteText || taskText;
+
+    const logs = getDayLogs();
+    const key  = getDayKey();
+    if (!logs[key]) logs[key] = [];
+
+    if (isDone) {
+      // Add one entry per PC tag, avoid duplicates
+      pcTags.forEach(pc => {
+        const exists = logs[key].some(e => e.pc === pc && e.rowIdx === rowIdx);
+        if (!exists) {
+          logs[key].push({ pc, note, rowIdx });
+        }
+      });
+    } else {
+      // Remove entries that came from this row
+      logs[key] = logs[key].filter(e => e.rowIdx !== rowIdx);
+    }
+
+    saveDayLogs(logs);
+    renderDayLog();
+  }
+
+  function checkBtn(e, btn) {
+    e.stopPropagation();
+    toggleRow(btn.closest('tr'));
+  }
+
+  function updateProgress() {
+    const count = doneRows.length;
+    const pct   = totalRows > 0 ? (count / totalRows) * 100 : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('prog-count').textContent   = count + ' / ' + totalRows;
+  }
+
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.remove('active');
+      ['t1','t2','t3','t4','t5','t6'].forEach(c => t.classList.remove(c));
+    });
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    const cls = btn.className.match(/t\d/);
+    if (cls) btn.classList.add(cls[0]);
+  }
+
+  function showPC(e, pc, title, desc) {
+    e.stopPropagation();
+    document.getElementById('ttPC').textContent    = pc;
+    document.getElementById('ttTitle').textContent = title;
+    document.getElementById('ttDesc').textContent  = desc;
+    document.getElementById('tooltipOverlay').classList.add('show');
+  }
+
+  function closeTooltip(e) { if (e.target === document.getElementById('tooltipOverlay')) closeTooltipBtn(); }
+  function closeTooltipBtn() { document.getElementById('tooltipOverlay').classList.remove('show'); }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeTooltipBtn();
+      closeModal('connectModal');
+      closeModal('importModal');
+      closeModal('apiKeyModal');
+    }
+  });
+
+  // Enter key in API key modal
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('apiKeyInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') saveApiKey();
+    });
+  });
+
+  // ── AI PC SUGGESTER ──────────────────────────────────────────────────────
+  // ── AI PC SUGGESTER ──────────────────────────────────────────────────────
+  const PC_DATA = [
+    {pc:'PC1',name:'Regulatory Requirements & Obligations',desc:'Architects Acts, codes of conduct, CPD, PII, employment standards, legislation'},
+    {pc:'PC2',name:'Quality Assurance Systems',desc:'QA checklists, document control, practice management, ethical employment, quality systems'},
+    {pc:'PC3',name:'Project Planning',desc:'Project plan, program, plan of work, milestones, stakeholders, Country implications, resource planning'},
+    {pc:'PC4',name:'Project Resource Planning',desc:'Fee proposal, staff hours, resource schedule, charge-out rates, overheads, project budget'},
+    {pc:'PC5',name:'Client Architect Agreement',desc:'CAA, fee letter, contract, scope of services, partial services, sub-consultants, agreement'},
+    {pc:'PC6',name:'Scope of Services Variations',desc:'Scope variation, fee variation, change order, variation request, client instruction change'},
+    {pc:'PC7',name:'Client / Stakeholder Communications & Approvals',desc:'Client email, approval, communication, meeting, sign-off, client instruction, stakeholder update'},
+    {pc:'PC8',name:'First Nations Engagement Processes',desc:'Aboriginal, Torres Strait Islander, First Nations, cultural engagement, Knowledge Holders, Country, Indigenous engagement plan'},
+    {pc:'PC9',name:'Procurement Methods',desc:'Lump sum, design and construct, D&C, cost plus, turnkey, procurement, tender, construction contract'},
+    {pc:'PC10',name:'Whole Life Carbon',desc:'Whole life carbon, WLC, lifecycle carbon, embodied carbon, operational carbon, greenhouse gas, carbon assessment'},
+    {pc:'PC11',name:'Procurement Process',desc:'Procurement process, procurement strategy, consultant scope, delivery method assessment, project delivery'},
+    {pc:'PC12',name:'Statutory Requirements / Building Codes',desc:'NCC, National Construction Code, building code, Australian Standards, planning controls, fire safety, accessibility, BCA'},
+    {pc:'PC13',name:'Documentation Processes',desc:'Documentation program, deliverables list, documentation strategy, drawing schedule, document planning'},
+    {pc:'PC14',name:'Construction Services / Contract Admin Systems',desc:'Construction administration, CA systems, RFI register, progress certificate template, instruction register, site admin setup'},
+    {pc:'PC15',name:'Copyright & Moral Rights',desc:'Copyright, moral rights, intellectual property, IP, cultural knowledge, licence, assignment'},
+    {pc:'PC16',name:'Risk Management',desc:'Risk management, safety in design, SID, SWOT, insurance, PII, climate risk, bushfire, flood, hazard'},
+    {pc:'PC17',name:'Caring for Country',desc:'Caring for Country, First Nations land management, Country aspirations, Aboriginal land connection'},
+    {pc:'PC18',name:'Iterative Concept Design Processes',desc:'Concept design, concept sketches, design options, design iteration, spatial exploration, 3D form, massing'},
+    {pc:'PC19',name:'Project Feasibility Assessments',desc:'Feasibility study, site constraints, planning controls, development viability, preliminary cost, site analysis'},
+    {pc:'PC20',name:'Project Budgets',desc:'Project budget, budget assessment, cost implication, budget review, timeframe, regulatory cost impact'},
+    {pc:'PC21',name:'Establishing Project Budgets',desc:'Cost planning, quantity surveyor, cost estimate, elemental cost, area schedule, value management, budget establishment'},
+    {pc:'PC22',name:'Conflicts of Interest',desc:'Conflict of interest, COI, disclosure, ethical obligation, contractor selection ethics'},
+    {pc:'PC23',name:'Return Brief',desc:'Return brief, PPR, principal project requirements, brief development, client brief response, brief sign-off'},
+    {pc:'PC24',name:'Project Development Options',desc:'Design options, project development, scheme comparison, brief response, option evaluation'},
+    {pc:'PC25',name:'History & Theory of Architecture',desc:'Architectural history, theory, precedent, typology, cultural meaning, heritage, architectural research'},
+    {pc:'PC26',name:'Site, Cultural & Contextual Analysis',desc:'Site analysis, cultural analysis, contextual analysis, heritage, topography, site investigation, environmental analysis'},
+    {pc:'PC27',name:'First Nations Engagement (Concept Design)',desc:'First Nations worldview, Aboriginal perspective, Indigenous co-design, cultural knowledge in design'},
+    {pc:'PC28',name:'Preliminary Design Research',desc:'Building science, environmental science, behavioural science, social science, design criteria research'},
+    {pc:'PC29',name:'Evaluation of Design Options',desc:'Heritage values, cultural values, community values, design evaluation, social equity, design assessment'},
+    {pc:'PC30',name:'Project Siting',desc:'Building siting, site placement, orientation, topography, site options, cultural siting, site planning'},
+    {pc:'PC31',name:'Environmental Sustainability',desc:'Environmental sustainability, LCA, life cycle assessment, energy, water, waste, carbon, resource depletion, sustainability analysis'},
+    {pc:'PC32',name:'Planning Principles / Statutory Planning',desc:'Planning permit, DA, development application, planning controls, zoning, setbacks, height limits, planning report'},
+    {pc:'PC33',name:'Integration of Sustainable Environmental Systems',desc:'Passive solar, HVAC, daylighting, acoustics, thermal performance, water systems, sustainable systems, services integration'},
+    {pc:'PC34',name:'Communication with Stakeholders',desc:'Stakeholder presentation, design presentation, community engagement, culturally responsive communication'},
+    {pc:'PC35',name:'Operational & Embodied Carbon',desc:'Operational carbon, embodied carbon, NatHERS, BASIX, GreenStar, NABERS, net zero, carbon reduction'},
+    {pc:'PC36',name:'Engagement with First Nations Peoples (Detailed Design)',desc:'First Nations detailed design, Aboriginal cultural integration, co-design, Country in detailed design'},
+    {pc:'PC37',name:'Documentation Appropriate for Construction',desc:'IFC, issued for construction, working drawings, construction drawings, specifications, setout, door schedule, window schedule'},
+    {pc:'PC38',name:'Value Management Processes',desc:'Value management, value engineering, budget reduction, VM exercise, design to budget, cost reduction'},
+    {pc:'PC39',name:'Material Selections / Structural & Construction Systems',desc:'Material selection, structural system, construction system, specification, façade, waterproofing, structural coordination'},
+    {pc:'PC40',name:'Design Presentations to Stakeholders',desc:'Design presentation, design approval, client presentation, stakeholder approval, presentation package'},
+    {pc:'PC41',name:'Consultant Coordination',desc:'Consultant coordination, structural coordination, services coordination, BIM coordination, clash detection, RCP, reflected ceiling plan'},
+    {pc:'PC42',name:'Planning Applications',desc:'Planning application, development application, DA lodgement, planning report, permit application, authority submission'},
+    {pc:'PC43',name:'Early Contractor Involvement',desc:'ECI, early contractor involvement, GMP, construction management, buildability review, supply chain, fast-track'},
+    {pc:'PC44',name:'Consultants',desc:'Consultant management, structural engineer, services engineer, consultant brief, consultant agreement, specialist consultant'},
+    {pc:'PC45',name:'Quality & Performance Standards',desc:'Material performance, NCC compliance, Australian Standards, NatHERS, WERS, product specification, performance standard'},
+    {pc:'PC46',name:'Project Documentation',desc:'Documentation package, drawing set, specification, schedule, model, report, documentation milestone'},
+    {pc:'PC47',name:'Accurate Documents',desc:'Document accuracy, QA review, drawing check, document review, program, accurate drawings, document quality'},
+    {pc:'PC48',name:'Procurement Method Implications for Project Delivery',desc:'Procurement implications, construction phase admin, project administration, delivery systems, documentation structure'},
+    {pc:'PC49',name:'Project Team Structures',desc:'Project team, team structure, roles, responsibilities, staffing, team organisation, project delivery team'},
+    {pc:'PC50',name:'Continued Engagement with First Nations Peoples',desc:'First Nations construction engagement, ongoing Aboriginal engagement, cultural diary, cultural project engagement'},
+    {pc:'PC51',name:'Contractor Selection',desc:'Tender, tender evaluation, contractor selection, tender list, information to tenderers, RFT, tender reconciliation'},
+    {pc:'PC52',name:'Contractual Relationship Defined by Procurement Method',desc:'Construction contract, contractual obligations, novation, risk allocation, contract roles, procurement contract'},
+    {pc:'PC53',name:'Advice to Client on Procurement Methods',desc:'Procurement advice, client advice, procurement report, procurement recommendation, D&C advice, lump sum advice'},
+    {pc:'PC54',name:'Periodic Site Visits',desc:'Site visit, site inspection, site meeting, quality monitoring, site observation, construction observation'},
+    {pc:'PC55',name:'Record Keeping & Document Control',desc:'Document control, record keeping, transmittal, revision control, clouding, filing system, document register'},
+    {pc:'PC56',name:'Identification of Defects',desc:'Defects, defect list, snag list, rectification, substitution approval, practical completion inspection, defects liability'},
+    {pc:'PC57',name:'Contract Administration',desc:'Contract administration, CA, progress claim, payment certificate, variation, extension of time, EOT, superintendent, architect instruction, RFI, practical completion'},
+    {pc:'PC58',name:'Contract Documents for Contract Completion',desc:'Contract completion, as-built drawings, warranties, manuals, occupancy permit, certificate of occupancy, handover documentation'},
+    {pc:'PC59',name:'Preparing & Recording Documentation',desc:'Record keeping obligations, Architects Act records, project diary, correspondence records, documentation risk'},
+    {pc:'PC60',name:'Post Occupancy Evaluation',desc:'Post occupancy evaluation, POE, building performance, occupant feedback, lifecycle assessment'},
+  ];
+
+  const AI_KEY_STORAGE = 'lccaa_gemini_key';
+
+  function getApiKey() {
+    return localStorage.getItem(AI_KEY_STORAGE) || '';
+  }
+
+  function promptForApiKey() {
+    // Open the modal — saving is handled by saveApiKey()
+    const input = document.getElementById('apiKeyInput');
+    input.value = getApiKey();
+    document.getElementById('apiKeyModal').classList.add('show');
+    setTimeout(() => input.focus(), 100);
+    return null; // runAI will be re-triggered after save if needed
+  }
+
+  function saveApiKey() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    if (key) {
+      localStorage.setItem(AI_KEY_STORAGE, key);
+      closeModal('apiKeyModal');
+      // Show confirmation briefly in sync bar area
+      const label = document.getElementById('syncLabel');
+      const prev = label.textContent;
+      label.textContent = '✓ Gemini API key saved — click Suggest PCs to use it';
+      setTimeout(() => label.textContent = prev, 3000);
+    }
+  }
+
+  function clearApiKey() {
+    if (confirm('Remove your saved Gemini API key?')) {
+      localStorage.removeItem(AI_KEY_STORAGE);
+      document.getElementById('apiKeyInput').value = '';
+      closeModal('apiKeyModal');
+    }
+  }
+
+  async function runAI() {
+    const input = document.getElementById('aiInput').value.trim();
+    if (!input) return;
+
+    const btn     = document.getElementById('aiSubmitBtn');
+    const loading = document.getElementById('aiLoading');
+    const results = document.getElementById('aiResults');
+    const errorEl = document.getElementById('aiError');
+
+    let apiKey = getApiKey();
+    if (!apiKey) {
+      apiKey = promptForApiKey();
+      if (!apiKey) return;
+    }
+
+    btn.disabled = true;
+    loading.classList.add('show');
+    results.classList.remove('show');
+    errorEl.classList.remove('show');
+
+    const pcList = PC_DATA.map(p => `${p.pc} - ${p.name}: ${p.desc}`).join('\n');
+
+    const prompt = `You are an assistant helping architecture graduates identify which NSCA (National Standard of Competency for Architects) Performance Criteria (PCs) they have demonstrated through their daily work.
+
+Here is the full list of PCs:
+${pcList}
+
+The user has described their day. Return ONLY a valid JSON array (no markdown, no preamble, no backticks) of the most relevant PCs — typically 3 to 8. Each object must have exactly these fields:
+- "pc": the PC number string e.g. "PC7"
+- "name": the PC name
+- "reason": one concise sentence (max 20 words) explaining why this PC applies
+
+Example: [{"pc":"PC7","name":"Client Communications","reason":"You sent an email seeking client approval to proceed."}]
+
+User's day: ${input}`;
+
+    try {
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.2, maxOutputTokens: 1024 }
+        })
+      });
+
+      if (response.status === 400 || response.status === 401 || response.status === 403) {
+        localStorage.removeItem(AI_KEY_STORAGE);
+        errorEl.textContent = 'Invalid API key — click \u{1F511} API Key to update it.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error?.message || 'API error ' + response.status);
+      }
+
+      const data = await response.json();
+      const raw  = data.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
+      const clean = raw.replace(/```json|```/g, '').trim();
+      const suggestions = JSON.parse(clean);
+
+      renderResults(suggestions, input);
+    } catch (err) {
+      errorEl.textContent = 'Error: ' + (err.message || 'Something went wrong — please try again.');
+      errorEl.classList.add('show');
+      console.error('AI error:', err);
+    } finally {
+      btn.disabled = false;
+      loading.classList.remove('show');
+    }
+  }
+
+  function renderResults(suggestions, userInput) {
+    const list = document.getElementById('aiResultsList');
+    const results = document.getElementById('aiResults');
+
+    if (!suggestions.length) {
+      list.innerHTML = '<p style="color:var(--muted);font-size:13px">No strong PC matches found — try describing your tasks in more detail.</p>';
+      results.classList.add('show');
+      return;
+    }
+
+    list.innerHTML = suggestions.map(s => `
+      <div class="ai-pc-card">
+        <div class="ai-pc-card-badge">${s.pc}</div>
+        <div class="ai-pc-card-body">
+          <div class="ai-pc-card-title">${s.name}</div>
+          <div class="ai-pc-card-reason">${s.reason}</div>
+        </div>
+        <div class="ai-pc-card-mark">
+          <button class="ai-mark-btn" onclick="markPCDone('${s.pc}', this)">${'✓'} Mark done</button>
+        </div>
+      </div>
+    `).join('');
+    results.classList.add('show');
+  }
+
+  function markPCDone(pcNum, btn) {
+    // Find all PC tags across all task tables that match this PC number
+    let matched = 0;
+    document.querySelectorAll('.log-table tbody tr').forEach(row => {
+      const tags = [...row.querySelectorAll('.pc-tag')];
+      const hasPC = tags.some(t => t.textContent.trim() === pcNum);
+      if (hasPC && !row.classList.contains('done-row')) {
+        row.classList.add('done-row');
+        const checkBtn = row.querySelector('.check-btn');
+        if (checkBtn) {
+          checkBtn.style.background = '#22c55e';
+          checkBtn.style.borderColor = '#22c55e';
+          checkBtn.style.color = '#fff';
+        }
+        const idx = getAllRows().indexOf(row);
+        if (idx > -1 && !doneRows.includes(idx)) doneRows.push(idx);
+        matched++;
+      }
+    });
+    if (matched > 0) {
+      localStorage.setItem(STORAGE, JSON.stringify(doneRows));
+      updateProgress();
+    }
+    btn.textContent = '✓ Marked';
+    btn.classList.add('marked');
+    scheduleDriveSync();
+  }
+
+  // ── INIT ─────────────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    // Day log inputs
+    document.getElementById('dayNoteInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') addDayLog();
+    });
+    document.getElementById('dayPcInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('dayNoteInput').focus();
+    });
+
+    // AI input
+    document.getElementById('aiInput').addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runAI();
+    });
+
+    // Week display & today's day tab
+    document.getElementById('weekDisplay').textContent = getWeekLabel(0);
+    const todayIdx = (new Date().getDay() + 6) % 7;
+    const todayDay = DAYS[Math.min(todayIdx, 4)];
+    currentDay = todayDay;
+    const todayBtn = document.getElementById('dt-' + todayDay);
+    if (todayBtn) {
+      document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'));
+      todayBtn.classList.add('active');
+    }
+
+    // Logbook rows
+    totalRows = document.querySelectorAll('.log-table tbody tr').length;
+    restoreLogbookState();
+
+    // Notes save-on-input
+    document.querySelectorAll('.notes-input').forEach(ta => {
+      ta.addEventListener('input', () => {
+        const rows = [...document.querySelectorAll('.log-table tbody tr')];
+        const row  = ta.closest('tr');
+        const idx  = rows.indexOf(row);
+        if (ta.value) savedNotes[idx] = ta.value;
+        else delete savedNotes[idx];
+        saveDayState();
+
+        // If this row is checked, update its day log entries with the new note
+        if (row.classList.contains('done-row')) {
+          const logs = getDayLogs();
+          const key  = getDayKey();
+          if (logs[key]) {
+            const taskText = row.querySelector('.task-cell')?.textContent.trim() || '';
+            const newNote  = ta.value.trim() || taskText;
+            logs[key].forEach(e => {
+              if (e.rowIdx === idx) e.note = newNote;
+            });
+            saveDayLogs(logs);
+            renderDayLog();
+          }
+        }
+      });
+    });
+
+    updateProgress();
+    renderDayLog();
+
+    // Drive sync — restore connection status & pull latest data
+    if (driveUrl) {
+      setSyncStatus('syncing', 'Reconnecting to Drive…');
+      document.getElementById('connectBtn').textContent = '⚙ Drive Settings';
+      document.getElementById('syncNowBtn').style.display = '';
+      const lastSync = localStorage.getItem(SYNC_TIME_KEY);
+      if (lastSync) document.getElementById('syncTime').textContent = 'Last synced ' + lastSync;
+      syncNow();
+    }
+  });
+
+</script>
+</body>
+</html>
